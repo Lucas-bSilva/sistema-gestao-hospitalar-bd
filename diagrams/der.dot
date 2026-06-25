@@ -1,0 +1,32 @@
+digraph DER {
+  graph [rankdir=LR, bgcolor="white", splines=ortho, nodesep=0.6, ranksep=1.0];
+  node [shape=record, fontname="Arial", fontsize=10];
+  edge [fontname="Arial", fontsize=9];
+
+  PESSOA [label="{PESSOA|PK id_pessoa\lnome\lCPF UNIQUE\ldata_nascimento\lis_flamengo\ltelefone\l}"];
+  PACIENTE [label="{PACIENTE|PK/FK id_pessoa\lnum_convenio UNIQUE\lalergias\lgrupo_sanguineo\lendereco\l}"];
+  PROFISSIONAL [label="{PROFISSIONAL|PK/FK id_pessoa\lCRM UNIQUE\ldata_admissao\lespecialidade\l}"];
+  RESIDENTE [label="{RESIDENTE|PK/FK id_profissional\lano_residencia\l}"];
+  PRECEPTOR [label="{PRECEPTOR|PK/FK id_profissional\ltitulacao\l}"];
+  ATENDIMENTO [label="{ATENDIMENTO|PK id_atendimento\ldata_hora\lduracao_minutos\lFK id_paciente\lFK id_residente\lFK id_preceptor\l}"];
+  PROCEDIMENTO [label="{PROCEDIMENTO|PK id_procedimento\lcodigo UNIQUE\lnome\ltempo_medio_minutos\lnivel_risco\l}"];
+  PROCEDIMENTO_REALIZADO [label="{PROCEDIMENTO_REALIZADO|PK/FK id_atendimento\lPK/FK id_procedimento\lquantidade\ltempo_real_minutos\lobservacao\lfaturado\l}"];
+  UNIDADE [label="{UNIDADE|PK id_unidade\lnome UNIQUE\ltipo\lcapacidade_leitos\l}"];
+  ESCALA [label="{ESCALA|PK id_escala\lFK id_unidade\ldia_semana\lturno\lFK id_residente\lFK id_preceptor\lUNIQUE(unidade,dia,turno,residente)\l}"];
+
+  PESSOA -> PACIENTE [label="especializacao 1:0..1"];
+  PESSOA -> PROFISSIONAL [label="especializacao 1:0..1"];
+  PROFISSIONAL -> RESIDENTE [label="papel historico 1:0..1"];
+  PROFISSIONAL -> PRECEPTOR [label="papel historico 1:0..1"];
+
+  PACIENTE -> ATENDIMENTO [label="1:N"];
+  RESIDENTE -> ATENDIMENTO [label="1:N realiza"];
+  PRECEPTOR -> ATENDIMENTO [label="1:N supervisiona"];
+
+  ATENDIMENTO -> PROCEDIMENTO_REALIZADO [label="1:N"];
+  PROCEDIMENTO -> PROCEDIMENTO_REALIZADO [label="1:N"];
+
+  UNIDADE -> ESCALA [label="1:N"];
+  RESIDENTE -> ESCALA [label="1:N"];
+  PRECEPTOR -> ESCALA [label="1:N"];
+}
