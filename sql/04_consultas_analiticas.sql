@@ -24,18 +24,19 @@ GROUP BY a.id_preceptor, p.nome
 HAVING COUNT(*) > 5
 ORDER BY total_supervisoes DESC;
 
--- 3) Para cada unidade, quantidade de plantoes escalados por residente no mes corrente.
--- Como a Etapa 1 define dia_semana/turno, e nao data do plantao, a consulta mostra
--- a quantidade de combinacoes fixas de escala por unidade e residente no cadastro atual.
+-- 3) Para cada unidade, mostrar a quantidade de plantoes escalados
+-- por residente no mes corrente.
 SELECT
     u.nome AS unidade,
     pr.nome AS residente,
-    COUNT(e.id_escala) AS quantidade_plantoes_cadastrados
+    COUNT(e.id_escala) AS quantidade_plantoes_mes_corrente
 FROM unidade u
-LEFT JOIN escala e ON e.id_unidade = u.id_unidade
-LEFT JOIN pessoa pr ON pr.id_pessoa = e.id_residente
+JOIN escala e ON e.id_unidade = u.id_unidade
+JOIN pessoa pr ON pr.id_pessoa = e.id_residente
+WHERE e.data_plantao >= DATE_TRUNC('month', CURRENT_DATE)
+  AND e.data_plantao <  DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month'
 GROUP BY u.id_unidade, u.nome, pr.nome
-ORDER BY u.nome, quantidade_plantoes_cadastrados DESC, residente;
+ORDER BY u.nome, quantidade_plantoes_mes_corrente DESC, residente;
 
 -- 4) Pacientes que nunca realizaram procedimento de nivel de risco ALTO.
 SELECT
