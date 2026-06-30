@@ -10,50 +10,63 @@ Projeto da disciplina de Banco de Dados com SQL puro, sem ORM, conforme a Etapa 
 ## Estrutura
 
 ```text
-sgh_dra_yuska_etapa1/
+sistema-gestao-hospitalar-bd/
 ├── sql/
-│   ├── 01_schema.sql                # Cria tabelas, PKs, FKs, CHECKs, UNIQUEs e indices
-│   ├── 02_seed.sql                  # Insere dados de teste
-│   ├── 03_crud_consultas.sql        # CRUD e consultas basicas exigidas
-│   ├── 04_consultas_analiticas.sql  # Consultas analiticas exigidas
-│   └── 05_all.sql                   # Executa todos os scripts em sequencia
+│   ├── 01_schema.sql                # Cria tabelas, chaves, restricoes e indices
+│   ├── 02_seed.sql                  # Insere os dados de teste
+│   ├── 03_crud_consultas.sql        # Operacoes CRUD e consultas basicas
+│   ├── 04_consultas_analiticas.sql  # Consultas analiticas da Etapa 1
+│   ├── 05_all.sql                   # Execucao completa pelo psql
+│   └── 06_validacoes.sql            # Conferencias de dados e restricoes
 ├── docs/
-│   ├── DER_SGH_Dra_Yuska.pdf        # DER em PDF
-│   └── MODELAGEM_E_NORMALIZACAO.md  # Justificativas de cardinalidade e 3FN
+│   ├── DER_SGH_Dra_Yuska.pdf
+│   ├── MODELAGEM_E_NORMALIZACAO.md
+│   └── CODIGO_COMPLETO_POR_ARQUIVO.md
 ├── diagrams/
-│   └── der.dot                      # Fonte Graphviz do DER
+│   └── der.dot
 └── README.md
 ```
 
-## Como executar
+## Execução pelo pgAdmin 4
 
-### 1. Criar o banco
+1. Abrir o pgAdmin 4.
+2. Criar um banco chamado `hospital_yuska`.
+3. Clicar com o botão direito no banco e abrir o `Query Tool`.
+4. Executar os scripts nesta ordem:
 
-```bash
-createdb sgh_dra_yuska
-```
+```text
+1. sql/01_schema.sql
+2. sql/02_seed.sql
+3. sql/06_validacoes.sql
+4. sql/03_crud_consultas.sql
+5. sql/04_consultas_analiticas.sql
 
-### 2. Executar schema e dados de teste
+6. O script 01_schema.sql recria as tabelas.
+7. O script 02_seed.sql insere os dados de teste.
+8. O script 03_crud_consultas.sql demonstra o CRUD.
+9. O script 04_consultas_analiticas.sql executa as consultas analíticas.
+10. script 06_validacoes.sql confere quantidades mínimas e constraints.
+
+No pgAdmin, recomenda-se abrir cada arquivo no VS Code, copiar o conteúdo, colar no Query Tool e executar.
+
+Execução completa pelo psql
+
+O arquivo sql/05_all.sql foi criado para execução completa via terminal usando psql.
+
+psql -d hospital_yuska -f sql/05_all.sql
+
+Atenção: no pgAdmin, o arquivo 05_all.sql não é recomendado, porque os comandos \i são próprios do psql.
+
+Como executar pelo psql
 
 A partir da pasta raiz do projeto:
 
-```bash
-psql -d sgh_dra_yuska -f sql/01_schema.sql
-psql -d sgh_dra_yuska -f sql/02_seed.sql
-```
+psql -d hospital_yuska -f sql/01_schema.sql
+psql -d hospital_yuska -f sql/02_seed.sql
+psql -d hospital_yuska -f sql/06_validacoes.sql
+psql -d hospital_yuska -f sql/03_crud_consultas.sql
+psql -d hospital_yuska -f sql/04_consultas_analiticas.sql
 
-### 3. Executar CRUD e consultas
-
-```bash
-psql -d sgh_dra_yuska -f sql/03_crud_consultas.sql
-psql -d sgh_dra_yuska -f sql/04_consultas_analiticas.sql
-```
-
-Tambem e possivel executar tudo de uma vez:
-
-```bash
-psql -d sgh_dra_yuska -f sql/05_all.sql
-```
 
 ## Dados minimos atendidos
 
@@ -74,51 +87,66 @@ psql -d sgh_dra_yuska -f sql/05_all.sql
 - Justificativa de cardinalidades
 - Evidencia de normalizacao ate 3FN
 
+### Implementação do Banco
+
+- Tabelas com PRIMARY KEY
+- Tabelas com FOREIGN KEY
+- Restrições NOT NULL
+- Restrições UNIQUE
+- Restrições CHECK
+- Dados de teste para validação
+
 ### Banco de dados
 
 - CREATE TABLE com PK, FK, UNIQUE, NOT NULL e CHECK
 - Dados de teste suficientes para demonstracao
+- Indices auxiliares para consultas recorrentes
 
 ### CRUD e consultas basicas
 
-- Inserir novo atendimento verificando paciente, residente e preceptor
-- Listar atendimentos de paciente especifico por data
-- Listar procedimentos de um atendimento
-- Atualizar endereco e convenio de paciente
-- Remover procedimento realizado apenas quando `faturado = false`
-- Calcular duracao media de atendimentos por residente
+Arquivo:
+
+sql/03_crud_consultas.sql
+
+- Inserção de novo atendimento validando paciente, residente e preceptor
+- Listagem dos atendimentos de um paciente específico
+- Listagem dos procedimentos realizados em um atendimento
+- Atualização de endereço e convênio de paciente
+- Remoção de procedimento realizado apenas se não estiver faturado
+- Cálculo do tempo médio de duração dos atendimentos por residente
 
 ### Consultas analiticas
 
+Arquivo:
+
+sql/04_consultas_analiticas.sql
+
 - Ranking de residentes por numero de atendimentos
-- Preceptores com mais de 5 supervisoes no mes
-- Plantoes escalados por unidade e residente
-- Pacientes que nunca fizeram procedimento de risco ALTO
+- Preceptores que supervisionaram mais de 5 atendimentos em determinado mes
+- Plantoes escalados por unidade e residente no mes corrente
+- Pacientes que nunca realizaram procedimento de risco ALTO
 
-## Observacao importante
+### Arquivo de validação
 
-Alguns campos foram acrescentados para cumprir todos os requisitos da Etapa 1:
+O arquivo:
 
-- `paciente.endereco`, porque o CRUD pede atualizar endereco ou convenio.
-- `procedimento.nivel_risco`, porque uma consulta pede procedimentos de risco ALTO.
-- `procedimento_realizado.faturado`, porque a remocao depende de nao haver faturamento associado.
+sql/06_validacoes.sql
 
-## Execução pelo pgAdmin 4
+serve para conferir rapidamente se os dados mínimos foram inseridos e se as restrições principais foram criadas.
 
-1. Abrir o pgAdmin 4.
-2. Criar um banco chamado `hospital_yuska`.
-3. Clicar com o botão direito no banco e abrir o `Query Tool`.
-4. Executar os scripts nesta ordem:
+Observações de implementação
 
-```text
-SQL/01_schema.sql
-SQL/02_seed.sql
-SQL/03_crud_consultas.sql
-SQL/04_consultas_analiticas.sql
-SQL/06_validacoes.sql
+Alguns campos foram acrescentados para atender melhor aos requisitos da Etapa 1:
 
-5. O script 01_schema.sql recria as tabelas.
-6. O script 02_seed.sql insere os dados de teste.
-7. O script 03_crud_consultas.sql demonstra o CRUD.
-8. O script 04_consultas_analiticas.sql executa as consultas analíticas.
-9. script 06_validacoes.sql confere quantidades mínimas e constraints.
+paciente.endereco: usado no CRUD de atualização de paciente.
+procedimento.nivel_risco: usado na consulta de pacientes sem procedimento de risco ALTO.
+procedimento_realizado.faturado: usado para impedir exclusão de procedimento já faturado.
+escala.data_plantao: usado para consultar plantões no mês corrente.
+
+
+### Alguns campos foram acrescentados para atender diretamente aos requisitos da Etapa 1:
+
+paciente.endereco: necessario para o requisito de atualizar endereco ou convenio.
+procedimento.nivel_risco: necessario para consultar pacientes sem procedimento de risco ALTO.
+procedimento_realizado.faturado: necessario para impedir exclusao de procedimento ja faturado.
+escala.data_plantao: necessario para filtrar plantoes do mes corrente.
