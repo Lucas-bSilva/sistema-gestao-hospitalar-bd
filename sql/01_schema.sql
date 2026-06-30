@@ -94,6 +94,7 @@ CREATE TABLE procedimento_realizado (
 CREATE TABLE escala (
     id_escala        BIGSERIAL PRIMARY KEY,
     id_unidade       BIGINT NOT NULL REFERENCES unidade(id_unidade) ON DELETE RESTRICT,
+    data_plantao     DATE NOT NULL,
     dia_semana       VARCHAR(10) NOT NULL,
     turno            VARCHAR(10) NOT NULL,
     id_residente     BIGINT NOT NULL REFERENCES residente(id_profissional) ON DELETE RESTRICT,
@@ -101,11 +102,5 @@ CREATE TABLE escala (
     CONSTRAINT ck_escala_dia CHECK (dia_semana IN ('segunda','terca','quarta','quinta','sexta','sabado','domingo')),
     CONSTRAINT ck_escala_turno CHECK (turno IN ('manha','tarde','noite')),
     CONSTRAINT ck_escala_res_preceptor_distintos CHECK (id_residente <> id_preceptor),
-    CONSTRAINT uq_escala_unidade_dia_turno_residente UNIQUE (id_unidade, dia_semana, turno, id_residente)
+    CONSTRAINT uq_escala_unidade_dia_turno_residente UNIQUE (id_unidade, data_plantao, turno, id_residente)
 );
-
-CREATE INDEX idx_atendimento_paciente_data ON atendimento(id_paciente, data_hora);
-CREATE INDEX idx_atendimento_residente ON atendimento(id_residente);
-CREATE INDEX idx_atendimento_preceptor_data ON atendimento(id_preceptor, data_hora);
-CREATE INDEX idx_pr_procedimento ON procedimento_realizado(id_procedimento);
-CREATE INDEX idx_escala_unidade_residente ON escala(id_unidade, id_residente);

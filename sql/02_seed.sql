@@ -84,12 +84,12 @@ INSERT INTO procedimento_realizado (id_atendimento, id_procedimento, quantidade,
 (10, 5, 1, 25, 'Curativo planejado', FALSE),
 (11, 3, 1, 14, 'Medicacao sem reacao', FALSE);
 
-INSERT INTO escala (id_unidade, dia_semana, turno, id_residente, id_preceptor) VALUES
-(1, 'segunda', 'manha', 6, 11),
-(2, 'segunda', 'tarde', 7, 12),
-(3, 'terca', 'noite', 8, 13),
-(4, 'quarta', 'manha', 9, 14),
-(1, 'quinta', 'tarde', 10, 15),
-(2, 'sexta', 'noite', 6, 11),
-(3, 'sabado', 'manha', 7, 13),
-(4, 'domingo', 'tarde', 8, 15);
+INSERT INTO escala (id_unidade, data_plantao, dia_semana, turno, id_residente, id_preceptor) VALUES
+(1, DATE_TRUNC('month', CURRENT_DATE)::date + 1,  'segunda', 'manha', 6, 11),
+(2, DATE_TRUNC('month', CURRENT_DATE)::date + 2,  'segunda', 'tarde', 7, 12),
+(3, DATE_TRUNC('month', CURRENT_DATE)::date + 3,  'terca',   'noite', 8, 13),
+(4, DATE_TRUNC('month', CURRENT_DATE)::date + 4,  'quarta',  'manha', 9, 14),
+(1, DATE_TRUNC('month', CURRENT_DATE)::date + 5,  'quinta',  'tarde', 10, 15),
+(2, DATE_TRUNC('month', CURRENT_DATE)::date + 6,  'sexta',   'noite', 6, 11),
+(3, DATE_TRUNC('month', CURRENT_DATE)::date + 7,  'sabado',  'manha', 7, 13),
+(4, DATE_TRUNC('month', CURRENT_DATE)::date + 8,  'domingo', 'tarde', 8, 15);
