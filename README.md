@@ -102,3 +102,23 @@ Alguns campos foram acrescentados para cumprir todos os requisitos da Etapa 1:
 - `paciente.endereco`, porque o CRUD pede atualizar endereco ou convenio.
 - `procedimento.nivel_risco`, porque uma consulta pede procedimentos de risco ALTO.
 - `procedimento_realizado.faturado`, porque a remocao depende de nao haver faturamento associado.
+
+## Execução pelo pgAdmin 4
+
+1. Abrir o pgAdmin 4.
+2. Criar um banco chamado `hospital_yuska`.
+3. Clicar com o botão direito no banco e abrir o `Query Tool`.
+4. Executar os scripts nesta ordem:
+
+```text
+SQL/01_schema.sql
+SQL/02_seed.sql
+SQL/03_crud_consultas.sql
+SQL/04_consultas_analiticas.sql
+SQL/06_validacoes.sql
+
+5. O script 01_schema.sql recria as tabelas.
+6. O script 02_seed.sql insere os dados de teste.
+7. O script 03_crud_consultas.sql demonstra o CRUD.
+8. O script 04_consultas_analiticas.sql executa as consultas analíticas.
+9. script 06_validacoes.sql confere quantidades mínimas e constraints.
