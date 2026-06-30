@@ -1,7 +1,11 @@
--- CRUD e consultas basicas - SQL puro
+/*
+CRUD e consultas basicas - Etapa 1
 
--- 1) Inserir novo atendimento verificando se paciente, residente e preceptor existem.
--- Troque os valores do WITH parametros conforme a necessidade.
+As operacoes abaixo foram separadas por requisito para facilitar a demonstracao.
+No pgAdmin, execute cada bloco completo, sempre ate o ponto e virgula (;).
+*/
+
+-- 1) Inserir novo atendimento validando paciente, residente e preceptor.
 WITH parametros AS (
     SELECT
         TIMESTAMP '2026-06-20 09:00' AS data_hora,
@@ -9,50 +13,86 @@ WITH parametros AS (
         1::BIGINT AS id_paciente,
         6::BIGINT AS id_residente,
         11::BIGINT AS id_preceptor
-), validacao AS (
-    SELECT p.*
-    FROM parametros p
-    WHERE EXISTS (SELECT 1 FROM paciente WHERE id_pessoa = p.id_paciente)
-      AND EXISTS (SELECT 1 FROM residente WHERE id_profissional = p.id_residente)
-      AND EXISTS (SELECT 1 FROM preceptor WHERE id_profissional = p.id_preceptor)
+),
+validacao AS (
+    SELECT parametros.*
+    FROM parametros
+    WHERE EXISTS (
+        SELECT 1
+        FROM paciente
+        WHERE paciente.id_pessoa = parametros.id_paciente
+    )
+    AND EXISTS (
+        SELECT 1
+        FROM residente
+        WHERE residente.id_profissional = parametros.id_residente
+    )
+    AND EXISTS (
+        SELECT 1
+        FROM preceptor
+        WHERE preceptor.id_profissional = parametros.id_preceptor
+    )
 )
-INSERT INTO atendimento (data_hora, duracao_minutos, id_paciente, id_residente, id_preceptor)
-SELECT data_hora, duracao_minutos, id_paciente, id_residente, id_preceptor
+INSERT INTO atendimento (
+    data_hora,
+    duracao_minutos,
+    id_paciente,
+    id_residente,
+    id_preceptor
+)
+SELECT
+    data_hora,
+    duracao_minutos,
+    id_paciente,
+    id_residente,
+    id_preceptor
 FROM validacao
 RETURNING *;
 
+-- Conferencia opcional do atendimento inserido.
+SELECT *
+FROM atendimento
+ORDER BY id_atendimento DESC
+LIMIT 3;
+
 -- 2) Listar todos os atendimentos de um paciente especifico, ordenados por data.
 SELECT
-    a.id_atendimento,
-    a.data_hora,
-    a.duracao_minutos,
-    pp.nome AS paciente,
-    pr.nome AS residente,
-    pc.nome AS preceptor
-FROM atendimento a
-JOIN pessoa pp ON pp.id_pessoa = a.id_paciente
-JOIN pessoa pr ON pr.id_pessoa = a.id_residente
-JOIN pessoa pc ON pc.id_pessoa = a.id_preceptor
-WHERE a.id_paciente = 1
-ORDER BY a.data_hora;
+    atendimento.id_atendimento,
+    atendimento.data_hora,
+    atendimento.duracao_minutos,
+    paciente.nome AS paciente,
+    residente.nome AS residente,
+    preceptor.nome AS preceptor
+FROM atendimento
+JOIN pessoa paciente
+    ON paciente.id_pessoa = atendimento.id_paciente
+JOIN pessoa residente
+    ON residente.id_pessoa = atendimento.id_residente
+JOIN pessoa preceptor
+    ON preceptor.id_pessoa = atendimento.id_preceptor
+WHERE atendimento.id_paciente = 1
+ORDER BY atendimento.data_hora;
 
--- 3) Listar procedimentos realizados em um atendimento.
+-- 3) Listar os procedimentos realizados em um atendimento.
 SELECT
-    a.id_atendimento,
-    proc.codigo,
-    proc.nome AS procedimento,
-    pr.quantidade,
-    pr.tempo_real_minutos,
-    pr.observacao
-FROM procedimento_realizado pr
-JOIN procedimento proc ON proc.id_procedimento = pr.id_procedimento
-JOIN atendimento a ON a.id_atendimento = pr.id_atendimento
-WHERE a.id_atendimento = 1
-ORDER BY proc.nome;
+    atendimento.id_atendimento,
+    procedimento.codigo,
+    procedimento.nome AS procedimento,
+    procedimento_realizado.quantidade,
+    procedimento_realizado.tempo_real_minutos,
+    procedimento_realizado.observacao
+FROM procedimento_realizado
+JOIN procedimento
+    ON procedimento.id_procedimento = procedimento_realizado.id_procedimento
+JOIN atendimento
+    ON atendimento.id_atendimento = procedimento_realizado.id_atendimento
+WHERE atendimento.id_atendimento = 1
+ORDER BY procedimento.nome;
 
 -- 4) Atualizar dados de um paciente: endereco e convenio.
 UPDATE paciente
-SET endereco = 'Rua Atualizada, 123',
+SET
+    endereco = 'Rua Atualizada, 123',
     num_convenio = 'CONV-001-ATUAL'
 WHERE id_pessoa = 1
 RETURNING *;
@@ -64,14 +104,26 @@ WHERE id_atendimento = 1
   AND faturado = FALSE
 RETURNING *;
 
--- 6) Calcular tempo medio de duracao dos atendimentos por residente.
+-- Conferencia opcional da remocao anterior.
+SELECT *
+FROM procedimento_realizado
+WHERE id_atendimento = 1
+ORDER BY id_procedimento;
+
+-- 6) Calcular o tempo medio de duracao dos atendimentos por residente.
 SELECT
-    r.id_profissional AS id_residente,
-    p.nome AS residente,
-    ROUND(AVG(a.duracao_minutos)::numeric, 2) AS media_duracao_minutos,
+    residente.id_profissional AS id_residente,
+    pessoa.nome AS residente,
+    ROUND(AVG(atendimento.duracao_minutos)::numeric, 2) AS media_duracao_minutos,
     COUNT(*) AS total_atendimentos
-FROM atendimento a
-JOIN residente r ON r.id_profissional = a.id_residente
-JOIN pessoa p ON p.id_pessoa = r.id_profissional
-GROUP BY r.id_profissional, p.nome
-ORDER BY media_duracao_minutos DESC;
+FROM atendimento
+JOIN residente
+    ON residente.id_profissional = atendimento.id_residente
+JOIN pessoa
+    ON pessoa.id_pessoa = residente.id_profissional
+GROUP BY
+    residente.id_profissional,
+    pessoa.nome
+ORDER BY
+    media_duracao_minutos DESC,
+    residente;
