@@ -50,3 +50,9 @@ A especificacao da Etapa 1 menciona atualizar endereco ou convenio do paciente, 
 A consulta de pacientes sem procedimento de risco alto exige a classificacao de risco do procedimento. Por isso, foi acrescentado `nivel_risco` em `procedimento`, com CHECK para BAIXO, MEDIO e ALTO.
 
 A remocao de procedimento realizado depende de verificar faturamento. Por isso, foi acrescentado o campo booleano `faturado` em `procedimento_realizado`.
+
+## Ajuste operacional na tabela ESCALA
+
+A especificação define escala por unidade, dia da semana, turno, residente e preceptor. Para viabilizar a consulta analítica que solicita a quantidade de plantões no mês corrente, foi incluído o atributo `data_plantao`.
+
+O campo `dia_semana` foi mantido porque faz parte da regra descrita no enunciado. O campo `data_plantao` permite filtrar o mês corrente sem comprometer a regra original da escala.
