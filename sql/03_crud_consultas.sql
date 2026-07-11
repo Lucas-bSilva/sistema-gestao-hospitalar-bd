@@ -2,7 +2,7 @@
 CRUD e consultas basicas - Etapa 1
 
 As operacoes abaixo foram separadas por requisito para facilitar a demonstracao.
-No pgAdmin, execute cada bloco completo, sempre ate o ponto e virgula (;).
+No pgAdmin, executar cada bloco completo, sempre ate o ponto e virgula (;).
 */
 
 -- 1) Inserir novo atendimento validando paciente, residente e preceptor.
@@ -55,7 +55,7 @@ FROM atendimento
 ORDER BY id_atendimento DESC
 LIMIT 3;
 
--- 2) Listar todos os atendimentos de um paciente especifico, ordenados por data.
+-- 2) Lista todos os atendimentos de um paciente especifico, ordenados por data.
 SELECT
     atendimento.id_atendimento,
     atendimento.data_hora,
@@ -73,7 +73,7 @@ JOIN pessoa preceptor
 WHERE atendimento.id_paciente = 1
 ORDER BY atendimento.data_hora;
 
--- 3) Listar os procedimentos realizados em um atendimento.
+-- 3) Lista os procedimentos realizados em um atendimento.
 SELECT
     atendimento.id_atendimento,
     procedimento.codigo,
@@ -89,7 +89,7 @@ JOIN atendimento
 WHERE atendimento.id_atendimento = 1
 ORDER BY procedimento.nome;
 
--- 4) Atualizar dados de um paciente: endereco e convenio.
+-- 4) Atualiza dados de um paciente: endereco e convenio.
 UPDATE paciente
 SET
     endereco = 'Rua Atualizada, 123',
@@ -97,7 +97,7 @@ SET
 WHERE id_pessoa = 1
 RETURNING *;
 
--- 5) Remover procedimento realizado apenas se ainda nao houver faturamento associado.
+-- 5) Remove procedimento realizado apenas se ainda nao houver faturamento associado.
 DELETE FROM procedimento_realizado
 WHERE id_atendimento = 1
   AND id_procedimento = 2
@@ -110,7 +110,7 @@ FROM procedimento_realizado
 WHERE id_atendimento = 1
 ORDER BY id_procedimento;
 
--- 6) Calcular o tempo medio de duracao dos atendimentos por residente.
+-- 6) Calcula o tempo medio de duracao dos atendimentos por residente.
 SELECT
     residente.id_profissional AS id_residente,
     pessoa.nome AS residente,
