@@ -1,19 +1,25 @@
-# Checklist de Validação - Etapa 1
+
+### Arquivo 2 — `evidencias/checklist_etapa1.md`
+
+
+# Checklist de validação — Etapa 1
 
 ## Modelagem
 
-- [ ] DER em PDF disponível em `documentos/DER_SGH_Dra_Yuska.pdf`
-- [ ] Modelo relacional documentado
-- [ ] Cardinalidades explicadas
-- [ ] Normalização até 3FN justificada
+- [ ] DER disponível em `docs/DER_SGH_Dra_Yuska.pdf`
+- [ ] DER compatível com `sql/01_schema.sql`
+- [ ] Cardinalidades justificadas
+- [ ] Especializações justificadas
+- [ ] Normalização até a 3FN explicada
 
-## Banco de Dados
+## Estrutura do banco
 
-- [ ] Tabelas criadas com PK
-- [ ] Tabelas criadas com FK
-- [ ] Campos obrigatórios com NOT NULL
-- [ ] Restrições UNIQUE aplicadas
-- [ ] Restrições CHECK aplicadas
+- [ ] Todas as tabelas foram criadas
+- [ ] Chaves primárias conferidas
+- [ ] Chaves estrangeiras conferidas
+- [ ] Restrições `NOT NULL` conferidas
+- [ ] Restrições `UNIQUE` conferidas
+- [ ] Restrições `CHECK` conferidas
 
 ## Dados mínimos
 
@@ -26,16 +32,24 @@
 
 ## CRUD e consultas básicas
 
-- [ ] Inserir atendimento validando paciente, residente e preceptor
-- [ ] Listar atendimentos de paciente específico
-- [ ] Listar procedimentos de um atendimento
-- [ ] Atualizar convênio/endereço de paciente
-- [ ] Remover procedimento apenas se não estiver faturado
-- [ ] Calcular tempo médio por residente
+- [ ] Inserção com validação das referências
+- [ ] Listagem de atendimentos por paciente
+- [ ] Listagem de procedimentos por atendimento
+- [ ] Atualização de endereço ou convênio
+- [ ] Exclusão condicionada ao faturamento
+- [ ] Média da duração por residente
 
 ## Consultas analíticas
 
-- [ ] Ranking de residentes por atendimentos
-- [ ] Preceptores com mais de 5 atendimentos no mês
-- [ ] Plantões por unidade e residente no mês corrente
-- [ ] Pacientes sem procedimento de risco ALTO
+- [ ] Ranking dos residentes
+- [ ] Preceptores com mais de cinco supervisões
+- [ ] Plantões por unidade e residente no mês
+- [ ] Pacientes sem procedimento de risco alto
+
+## Apresentação
+
+- [ ] Banco restaurado antes da demonstração
+- [ ] Scripts abertos previamente
+- [ ] Consultas executadas individualmente
+- [ ] Resultados esperados conferidos
+- [ ] Apresentação concluída em até 15 minutos
