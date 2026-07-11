@@ -1,6 +1,6 @@
 # Sistema de Gestão Hospitalar Dra. Yuska — Etapa 1
 
-Projeto desenvolvido para a disciplina de Banco de Dados utilizando PostgreSQL e SQL puro, sem ORM.
+Projeto acadêmico desenvolvido com PostgreSQL e SQL puro, sem ORM.
 
 ## Tecnologias
 
@@ -9,7 +9,7 @@ Projeto desenvolvido para a disciplina de Banco de Dados utilizando PostgreSQL e
 - VS Code
 - Git e GitHub
 
-## Estrutura do projeto
+## Estrutura
 
 ```text
 sistema-gestao-hospitalar-bd/
@@ -18,6 +18,7 @@ sistema-gestao-hospitalar-bd/
 ├── docs/
 │   ├── DER_SGH_Dra_Yuska.pdf
 │   ├── MODELAGEM_E_NORMALIZACAO.md
+│   ├── ROTEIRO_APRESENTACAO.md
 │   └── CODIGO_COMPLETO_POR_ARQUIVO.md
 ├── evidencias/
 │   └── checklist_etapa1.md
@@ -27,117 +28,76 @@ sistema-gestao-hospitalar-bd/
 │   ├── 03_crud_consultas.sql
 │   ├── 04_consultas_analiticas.sql
 │   ├── 05_all.sql
-│   └── 06_validacoes.sql
+│   ├── 06_validacoes.sql
+│   └── 07_testes_funcionais.sql
 ├── .gitignore
 └── README.md
+```
 
-Criação do banco
+## Criação do banco
 
 No pgAdmin 4:
 
-1. Conecte-se ao servidor PostgreSQL.
-2. Crie um banco chamado hospital_yuska.
+1. Conecte-se ao PostgreSQL;
+2. Crie o banco hospital_yuska;
 3. Abra o Query Tool desse banco.
 
-
-## Execução pelo pgAdmin 4
-
-1. Abrir o pgAdmin 4.
-2. Criar um banco chamado hospital_yuska.
-3. Clicar com o botão direito no banco e abrir o `Query Tool`.
-4. Executar os scripts nesta ordem:
-
-```text
+## Ordem de execução no pgAdmin
+```
 1. sql/01_schema.sql
 2. sql/02_seed.sql
 3. sql/06_validacoes.sql
 4. sql/03_crud_consultas.sql
 5. sql/04_consultas_analiticas.sql
+```
+O arquivo `sql/07_testes_funcionais.sql` pode ser usado depois da
+carga inicial para testar as operações sem alterar permanentemente os dados.
 
-6. O script 01_schema.sql                  recria as tabelas.
-7. O script 02_seed.sql                    insere os dados de teste.
-8. O script 03_crud_consultas.sql          demonstra o CRUD.
-9. O script 04_consultas_analiticas.sql    executa as consultas analíticas.
-10. script 06_validacoes.sql               confere quantidades mínimas e constraints.
+No pgAdmin, abra o conteúdo do arquivo pelo ícone de pasta ou copie-o
+do VS Code para o Query Tool. O caminho do arquivo, sozinho, não é SQL.
 
-No pgAdmin, o caminho do arquivo não é um comando SQL. Abra o arquivo pelo ícone de pasta ou copie seu conteúdo do VS Code para o Query Tool.
-
-Execução completa pelo psql
-
-O arquivo sql/05_all.sql foi criado para execução completa via terminal usando psql.
-
+## Execução completa pelo psql
+```
 psql -d hospital_yuska -f sql/05_all.sql
+```
+Os comandos `\i` do `05_all.sql` são próprios do `psql`.
 
-Atenção: no pgAdmin, o arquivo 05_all.sql não é recomendado, porque os comandos \i são próprios do psql.
+## Carga de teste
 
-Como executar pelo psql
+- 5 pacientes
+- 5 residentes
+- 5 preceptores
+- 4 unidades
+- 12 atendimentos
+- 12 procedimentos realizados
+- 6 procedimentos cadastrados
 
-A partir da pasta raiz do projeto:
+## Arquivos por requisito
 
-psql -d hospital_yuska -f sql/01_schema.sql
-psql -d hospital_yuska -f sql/02_seed.sql
-psql -d hospital_yuska -f sql/06_validacoes.sql
-psql -d hospital_yuska -f sql/03_crud_consultas.sql
-psql -d hospital_yuska -f sql/04_consultas_analiticas.sql
+| Requisito | Arquivo |
+| :--- | :--- |
+| Estrutura e constraints | `sql/01_schema.sql` |
+| Dados iniciais | `sql/02_seed.sql` |
+| CRUD e consultas básicas | `sql/03_crud_consultas.sql` |
+| Consultas analíticas | `sql/04_consultas_analiticas.sql` |
+| Validações | `sql/06_validacoes.sql` |
+| Testes repetíveis | `sql/07_testes_funcionais.sql` |
+| DER | `docs/DER_SGH_Dra_Yuska.pdf` |
+| Normalização | `docs/MODELAGEM_E_NORMALIZACAO.md` |
 
+## Campos complementares
 
-## Dados de teste
+Foram adicionados campos necessários para requisitos que aparecem
+nas funcionalidades da Etapa 1:
 
-A carga inicial possui:
+- paciente.endereco;
+- procedimento.nivel_risco;
+- procedimento_realizado.faturado;
+- escala.data_plantao.
 
-5 pacientes
-5 residentes
-5 preceptores
-4 unidades
-12 atendimentos
-12 procedimentos realizados
-6 procedimentos cadastrados
-
-## Funcionalidades da Etapa 1 implementadas
-
-### Modelagem
-
-- DER em PDF
-- Modelo relacional completo
-- Justificativa de cardinalidades
-- Normalizacao ate 3FN
-
-### Implementação
-- Chaves primárias e estrangeiras
-- Restrições NOT NULL, UNIQUE e CHECK
-- Integridade referencial
-- Índices auxiliares
-- CRUD e consultas básicas
-
-O arquivo sql/03_crud_consultas.sql contém:
-
-- inserção de atendimento com validação das referências;
-- listagem de atendimentos por paciente;
-- listagem de procedimentos por atendimento;
-- atualização de endereço e convênio;
-- remoção condicionada à ausência de faturamento;
-- média de duração por residente.
-
-## Consultas analíticas
-
-O arquivo sql/04_consultas_analiticas.sql contém:
-
-- ranking de residentes;
-- preceptores com mais de cinco supervisões no mês;
-- plantões por unidade e residente no mês corrente;
-- pacientes sem procedimentos de risco alto.
-- Campos adicionais
-
-Alguns atributos foram incluídos para viabilizar requisitos descritos na própria especificação:
-
-- paciente.endereco
-- procedimento.nivel_risco
-- procedimento_realizado.faturado
-- escala.data_plantao
-- Reinício dos testes
-
-Para restaurar o banco ao estado inicial:
-
-1. execute novamente sql/01_schema.sql;
-2. execute novamente sql/02_seed.sql;
-3. execute sql/06_validacoes.sql.
+## Restaurar a carga inicial
+```
+Execute sql/01_schema.sql.
+Execute sql/02_seed.sql.
+Execute sql/06_validacoes.sql.
+```
