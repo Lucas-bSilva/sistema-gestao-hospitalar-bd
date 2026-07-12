@@ -1,5 +1,4 @@
 -- Execucao completa pelo psql.
--- No pgAdmin, recomenda-se executar os arquivos separadamente.
 
 \i sql/01_schema.sql
 \i sql/02_seed.sql

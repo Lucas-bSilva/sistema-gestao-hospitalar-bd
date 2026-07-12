@@ -3,12 +3,9 @@ Testes funcionais da Etapa 1.
 
 Os testes que alteram dados usam transações finalizadas
 com ROLLBACK, preservando a carga inicial do banco.
-
 */
 
--- =========================================================
 -- TESTE 1: INSERÇÃO DE ATENDIMENTO COM REFERÊNCIAS VÁLIDAS
--- =========================================================
 
 BEGIN;
 
@@ -58,9 +55,7 @@ RETURNING *;
 ROLLBACK;
 
 
--- =========================================================
 -- TESTE 2: INSERÇÃO BLOQUEADA POR PACIENTE INEXISTENTE
--- =========================================================
 
 BEGIN;
 
@@ -110,9 +105,7 @@ RETURNING *;
 ROLLBACK;
 
 
--- =========================================================
 -- TESTE 3: LISTAGEM DOS ATENDIMENTOS DE UM PACIENTE
--- =========================================================
 
 SELECT
     atendimento.id_atendimento,
@@ -132,9 +125,7 @@ WHERE atendimento.id_paciente = 1
 ORDER BY atendimento.data_hora;
 
 
--- =========================================================
 -- TESTE 4: PROCEDIMENTOS REALIZADOS EM UM ATENDIMENTO
--- =========================================================
 
 SELECT
     procedimento.nome AS procedimento,
@@ -149,9 +140,7 @@ WHERE procedimento_realizado.id_atendimento = 1
 ORDER BY procedimento.nome;
 
 
--- =========================================================
 -- TESTE 5: ATUALIZAÇÃO CONTROLADA DE PACIENTE
--- =========================================================
 
 BEGIN;
 
@@ -165,9 +154,7 @@ RETURNING *;
 ROLLBACK;
 
 
--- =========================================================
 -- TESTE 6: REMOÇÃO DE PROCEDIMENTO NÃO FATURADO
--- =========================================================
 
 BEGIN;
 
@@ -180,9 +167,7 @@ RETURNING *;
 ROLLBACK;
 
 
--- =========================================================
 -- TESTE 7: PROCEDIMENTO FATURADO NÃO PODE SER REMOVIDO
--- =========================================================
 
 BEGIN;
 
@@ -195,9 +180,7 @@ RETURNING *;
 ROLLBACK;
 
 
--- =========================================================
 -- TESTE 8: TEMPO MÉDIO DOS ATENDIMENTOS POR RESIDENTE
--- =========================================================
 
 SELECT
     pessoa.nome AS residente,

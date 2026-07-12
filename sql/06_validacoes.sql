@@ -1,7 +1,6 @@
 /*
 Validações da Etapa 1.
 
-Execute após 01_schema.sql e 02_seed.sql.
 As consultas conferem carga mínima, constraints e consistência dos papéis.
 */
 

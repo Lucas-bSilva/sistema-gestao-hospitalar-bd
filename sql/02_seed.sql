@@ -51,7 +51,8 @@ INSERT INTO residente (id_profissional, ano_residencia) VALUES
 (7, 'R2'),
 (8, 'R3'),
 (9, 'R1'),
-(10, 'R2');
+(10, 'R2'),
+(11,'R3');
 
 INSERT INTO preceptor (id_profissional, titulacao) VALUES
 (11, 'doutor'),

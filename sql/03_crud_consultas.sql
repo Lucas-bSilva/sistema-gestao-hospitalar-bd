@@ -2,7 +2,6 @@
 CRUD e consultas basicas - Etapa 1
 
 As operacoes abaixo foram separadas por requisito para facilitar a demonstracao.
-No pgAdmin, executar cada bloco completo, sempre ate o ponto e virgula (;).
 */
 
 -- 1) Inserir novo atendimento validando paciente, residente e preceptor.

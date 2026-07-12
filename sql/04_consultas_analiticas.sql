@@ -1,8 +1,5 @@
 /*
 Consultas analiticas - Etapa 1
-
-Todas as consultas abaixo usam SQL puro e foram organizadas conforme os itens
-solicitados na especificacao do projeto.
 */
 
 -- 1) Ranking dos residentes por numero de atendimentos realizados.
