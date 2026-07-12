@@ -12,12 +12,18 @@ digraph DER {
   PROCEDIMENTO [label="{PROCEDIMENTO|PK id_procedimento\lcodigo UNIQUE\lnome\ltempo_medio_minutos\lnivel_risco\l}"];
   PROCEDIMENTO_REALIZADO [label="{PROCEDIMENTO_REALIZADO|PK/FK id_atendimento\lPK/FK id_procedimento\lquantidade\ltempo_real_minutos\lobservacao\lfaturado\l}"];
   UNIDADE [label="{UNIDADE|PK id_unidade\lnome UNIQUE\ltipo\lcapacidade_leitos\l}"];
-  ESCALA [label="{ESCALA|PK id_escala\lFK id_unidade\ldia_semana\lturno\lFK id_residente\lFK id_preceptor\lUNIQUE(unidade,dia,turno,residente)\l}"];
+  ESCALA [
+    label="{ESCALA|PK id_escala\lFK id_unidade\ldata_plantao\ldia_semana\lturno\lFK id_residente\lFK id_preceptor\lUNIQUE(unidade,dia,turno,residente)\lUNIQUE(unidade,data,turno,residente)\l}"
+];
 
   PESSOA -> PACIENTE [label="especializacao 1:0..1"];
   PESSOA -> PROFISSIONAL [label="especializacao 1:0..1"];
-  PROFISSIONAL -> RESIDENTE [label="papel historico 1:0..1"];
-  PROFISSIONAL -> PRECEPTOR [label="papel historico 1:0..1"];
+  PROFISSIONAL -> RESIDENTE [
+    label="especializacao 1:0..1"
+];
+  PROFISSIONAL -> PRECEPTOR [
+    label="especializacao 1:0..1"
+];
 
   PACIENTE -> ATENDIMENTO [label="1:N"];
   RESIDENTE -> ATENDIMENTO [label="1:N realiza"];
