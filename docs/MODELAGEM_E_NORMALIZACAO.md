@@ -33,7 +33,17 @@ Profissional tambem e especializado em Residente e Preceptor. A especificacao in
 - PROCEDIMENTO(id_procedimento PK, codigo UNIQUE, nome, tempo_medio_minutos, nivel_risco)
 - ATENDIMENTO(id_atendimento PK, data_hora, duracao_minutos, id_paciente FK, id_residente FK, id_preceptor FK)
 - PROCEDIMENTO_REALIZADO(id_atendimento PK/FK, id_procedimento PK/FK, quantidade, tempo_real_minutos, observacao, faturado)
-- ESCALA(id_escala PK, id_unidade FK, dia_semana, turno, id_residente FK, id_preceptor FK, UNIQUE(id_unidade, dia_semana, turno, id_residente))
+- - ESCALA(
+  id_escala PK,
+  id_unidade FK,
+  data_plantao,
+  dia_semana,
+  turno,
+  id_residente FK,
+  id_preceptor FK,
+  UNIQUE(id_unidade, dia_semana, turno, id_residente),
+  UNIQUE(id_unidade, data_plantao, turno, id_residente)
+  )
 
 ## 5. Evidencia de 3FN
 
@@ -51,8 +61,16 @@ A consulta de pacientes sem procedimento de risco alto exige a classificacao de 
 
 A remocao de procedimento realizado depende de verificar faturamento. Por isso, foi acrescentado o campo booleano `faturado` em `procedimento_realizado`.
 
-## Ajuste operacional na tabela ESCALA
+## 7. Ajuste operacional na tabela ESCALA
 
 A especificação define escala por unidade, dia da semana, turno, residente e preceptor. Para viabilizar a consulta analítica que solicita a quantidade de plantões no mês corrente, foi incluído o atributo `data_plantao`.
 
 O campo `dia_semana` foi mantido porque faz parte da regra descrita no enunciado. O campo `data_plantao` permite filtrar o mês corrente sem comprometer a regra original da escala.
+
+## 8. Limitação do histórico de papéis na Etapa 1
+
+A especificação informa que um profissional pode atuar como residente em determinado período e como preceptor em outro. Entretanto, o modelo relacional básico definido para a Etapa 1 não apresenta atributos de início e fim de vigência desses papéis.
+
+Por esse motivo, a implementação atual representa somente o papel cadastrado no momento, por meio das tabelas `residente` e `preceptor`. A representação completa do histórico exigiria uma tabela associativa com período de vigência ou outra estrutura adicional.
+
+Essa extensão não foi implementada na Etapa 1 para preservar o modelo relacional básico fornecido na especificação.

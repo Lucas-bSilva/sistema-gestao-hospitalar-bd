@@ -5,18 +5,45 @@ Execute após 01_schema.sql e 02_seed.sql.
 As consultas conferem carga mínima, constraints e consistência dos papéis.
 */
 
--- Confere a quantidade mínima de registros exigida.
-SELECT 'pacientes' AS item, COUNT(*) AS total FROM paciente
-UNION ALL
-SELECT 'residentes', COUNT(*) FROM residente
-UNION ALL
-SELECT 'preceptores', COUNT(*) FROM preceptor
-UNION ALL
-SELECT 'unidades', COUNT(*) FROM unidade
-UNION ALL
-SELECT 'atendimentos', COUNT(*) FROM atendimento
-UNION ALL
-SELECT 'procedimentos_realizados', COUNT(*) FROM procedimento_realizado
+-- Compara a carga atual com os mínimos definidos na especificação.
+WITH contagens AS (
+    SELECT 'pacientes' AS item, COUNT(*) AS total, 5::BIGINT AS minimo
+    FROM paciente
+
+    UNION ALL
+
+    SELECT 'residentes', COUNT(*), 5
+    FROM residente
+
+    UNION ALL
+
+    SELECT 'preceptores', COUNT(*), 5
+    FROM preceptor
+
+    UNION ALL
+
+    SELECT 'unidades', COUNT(*), 3
+    FROM unidade
+
+    UNION ALL
+
+    SELECT 'atendimentos', COUNT(*), 10
+    FROM atendimento
+
+    UNION ALL
+
+    SELECT 'procedimentos_realizados', COUNT(*), 10
+    FROM procedimento_realizado
+)
+SELECT
+    item,
+    total,
+    minimo,
+    CASE
+        WHEN total >= minimo THEN 'OK'
+        ELSE 'PENDENTE'
+    END AS situacao
+FROM contagens
 ORDER BY item;
 
 -- Lista as constraints criadas no schema público.

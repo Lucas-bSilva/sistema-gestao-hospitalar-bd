@@ -102,12 +102,56 @@ INSERT INTO procedimento_realizado (id_atendimento, id_procedimento, quantidade,
 (10, 5, 1, 25, 'Curativo planejado', FALSE),
 (11, 3, 1, 14, 'Medicacao sem reacao', FALSE);
 
-INSERT INTO escala (id_unidade, data_plantao, dia_semana, turno, id_residente, id_preceptor) VALUES
-(1, DATE_TRUNC('month', CURRENT_DATE)::date + 1, 'segunda', 'manha', 6, 11),
-(2, DATE_TRUNC('month', CURRENT_DATE)::date + 2, 'segunda', 'tarde', 7, 12),
-(3, DATE_TRUNC('month', CURRENT_DATE)::date + 3, 'terca', 'noite', 8, 13),
-(4, DATE_TRUNC('month', CURRENT_DATE)::date + 4, 'quarta', 'manha', 9, 14),
-(1, DATE_TRUNC('month', CURRENT_DATE)::date + 5, 'quinta', 'tarde', 10, 15),
-(2, DATE_TRUNC('month', CURRENT_DATE)::date + 6, 'sexta', 'noite', 6, 11),
-(3, DATE_TRUNC('month', CURRENT_DATE)::date + 7, 'sabado', 'manha', 7, 13),
-(4, DATE_TRUNC('month', CURRENT_DATE)::date + 8, 'domingo', 'tarde', 8, 15);
+/*
+As datas são criadas dentro do mês corrente.
+O dia da semana é calculado a partir de cada data para evitar inconsistências.
+*/
+WITH datas_escala AS (
+    SELECT
+        id_unidade,
+        data_plantao,
+        turno,
+        id_residente,
+        id_preceptor
+    FROM (
+        VALUES
+            (1::BIGINT, DATE_TRUNC('month', CURRENT_DATE)::date + 1, 'manha', 6::BIGINT, 11::BIGINT),
+            (2::BIGINT, DATE_TRUNC('month', CURRENT_DATE)::date + 2, 'tarde', 7::BIGINT, 12::BIGINT),
+            (3::BIGINT, DATE_TRUNC('month', CURRENT_DATE)::date + 3, 'noite', 8::BIGINT, 13::BIGINT),
+            (4::BIGINT, DATE_TRUNC('month', CURRENT_DATE)::date + 4, 'manha', 9::BIGINT, 14::BIGINT),
+            (1::BIGINT, DATE_TRUNC('month', CURRENT_DATE)::date + 5, 'tarde', 10::BIGINT, 15::BIGINT),
+            (2::BIGINT, DATE_TRUNC('month', CURRENT_DATE)::date + 6, 'noite', 6::BIGINT, 11::BIGINT),
+            (3::BIGINT, DATE_TRUNC('month', CURRENT_DATE)::date + 7, 'manha', 7::BIGINT, 13::BIGINT),
+            (4::BIGINT, DATE_TRUNC('month', CURRENT_DATE)::date + 8, 'tarde', 8::BIGINT, 15::BIGINT)
+    ) AS dados (
+        id_unidade,
+        data_plantao,
+        turno,
+        id_residente,
+        id_preceptor
+    )
+)
+INSERT INTO escala (
+    id_unidade,
+    data_plantao,
+    dia_semana,
+    turno,
+    id_residente,
+    id_preceptor
+)
+SELECT
+    id_unidade,
+    data_plantao,
+    CASE EXTRACT(ISODOW FROM data_plantao)
+        WHEN 1 THEN 'segunda'
+        WHEN 2 THEN 'terca'
+        WHEN 3 THEN 'quarta'
+        WHEN 4 THEN 'quinta'
+        WHEN 5 THEN 'sexta'
+        WHEN 6 THEN 'sabado'
+        WHEN 7 THEN 'domingo'
+    END AS dia_semana,
+    turno,
+    id_residente,
+    id_preceptor
+FROM datas_escala;
