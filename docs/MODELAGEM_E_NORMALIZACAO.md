@@ -33,7 +33,7 @@ Profissional tambem e especializado em Residente e Preceptor. A especificacao in
 - PROCEDIMENTO(id_procedimento PK, codigo UNIQUE, nome, tempo_medio_minutos, nivel_risco)
 - ATENDIMENTO(id_atendimento PK, data_hora, duracao_minutos, id_paciente FK, id_residente FK, id_preceptor FK)
 - PROCEDIMENTO_REALIZADO(id_atendimento PK/FK, id_procedimento PK/FK, quantidade, tempo_real_minutos, observacao, faturado)
-- - ESCALA(
+- ESCALA(
   id_escala PK,
   id_unidade FK,
   data_plantao,
