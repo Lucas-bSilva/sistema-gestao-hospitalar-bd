@@ -1,8 +1,6 @@
 /*
 Consultas analiticas - Etapa 1
 
-Todas as consultas abaixo usam SQL puro e foram organizadas conforme os itens
-solicitados na especificacao do projeto.
 */
 
 -- 1) Ranking dos residentes por numero de atendimentos realizados.
@@ -23,15 +21,15 @@ ORDER BY
     residente;
 
 -- 2) Preceptores que supervisionaram mais de 5 atendimentos em determinado mes.
--- Periodo usado para teste: junho de 2026.
+-- -- Período utilizado para demonstração da apresentação: julho de 2026.
 SELECT
     pessoa.nome AS preceptor,
     COUNT(*) AS total_supervisoes
 FROM atendimento
 JOIN pessoa
     ON pessoa.id_pessoa = atendimento.id_preceptor
-WHERE atendimento.data_hora >= DATE '2026-06-01'
-  AND atendimento.data_hora <  DATE '2026-07-01'
+WHERE atendimento.data_hora >= DATE '2026-07-01'
+  AND atendimento.data_hora <  DATE '2026-08-01'
 GROUP BY
     atendimento.id_preceptor,
     pessoa.nome
