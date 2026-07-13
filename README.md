@@ -161,17 +161,16 @@ Executar os arquivos na seguinte ordem:
 
 ---
 
-# Execução completa utilizando psql
+# Preparação automatizada utilizando psql
 
-Caso o ambiente possua o cliente psql instalado:
+O arquivo `sql/05_all.sql` recria a estrutura, insere a carga inicial
+e executa as validações:
 
 ```powershell
 psql -d hospital_yuska -f sql/05_all.sql
-```
 
-O arquivo `05_all.sql` utiliza comandos `\i`, compatíveis apenas com o cliente `psql`.
-
----
+As operações CRUD e consultas analíticas devem ser demonstradas
+separadamente pelos arquivos 03, 04 e 07.
 
 # Massa inicial de dados
 
