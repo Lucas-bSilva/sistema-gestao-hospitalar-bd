@@ -21,20 +21,28 @@ ORDER BY
     residente;
 
 -- 2) Preceptores que supervisionaram mais de 5 atendimentos em determinado mes.
--- -- Período utilizado para demonstração da apresentação: julho de 2026.
+-- O periodo foi definido de acordo com a carga de teste do arquivo 02_seed.sql.
+WITH periodo AS (
+    SELECT
+        DATE '2026-06-01' AS data_inicial,
+        DATE '2026-07-01' AS data_final
+)
 SELECT
     pessoa.nome AS preceptor,
     COUNT(*) AS total_supervisoes
 FROM atendimento
 JOIN pessoa
     ON pessoa.id_pessoa = atendimento.id_preceptor
-WHERE atendimento.data_hora >= DATE '2026-07-01'
-  AND atendimento.data_hora <  DATE '2026-08-01'
+CROSS JOIN periodo
+WHERE atendimento.data_hora >= periodo.data_inicial
+  AND atendimento.data_hora < periodo.data_final
 GROUP BY
     atendimento.id_preceptor,
     pessoa.nome
 HAVING COUNT(*) > 5
-ORDER BY total_supervisoes DESC;
+ORDER BY
+    total_supervisoes DESC,
+    preceptor;
 
 -- 3) Para cada unidade, quantidade de plantoes escalados por residente no mes corrente.
 SELECT
