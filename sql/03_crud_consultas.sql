@@ -1,4 +1,15 @@
 /*
+
+Observacao: 
+As operacoes de INSERT, UPDATE e DELETE deste arquivo alteram permanentemente
+a carga do banco.
+
+Para uma demonstracao repetivel, utilizar o arquivo
+07_testes_funcionais.sql, que executa as operacoes dentro de transacoes
+finalizadas com ROLLBACK.
+
+
+----------------------------------------------------------------------------------------------
 CRUD e consultas basicas - Etapa 1
 
 As operacoes abaixo foram separadas por requisito para facilitar a demonstracao.
