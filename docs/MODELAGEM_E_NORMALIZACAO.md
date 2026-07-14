@@ -1,5 +1,19 @@
 # Modelagem e Normalizacao - Etapa 1
 
+A implementação consegue detectar profissionais cadastrados simultaneamente
+como residente e preceptor por meio de uma consulta de validação presente em
+`sql/06_validacoes.sql`.
+
+Entretanto, com a estrutura de especialização baseada exclusivamente em
+tabelas separadas, uma constraint CHECK não consegue consultar a outra tabela.
+Assim, a exclusividade entre os papéis não é garantida de forma preventiva
+nesta etapa.
+
+A garantia automática poderá ser implementada posteriormente por uma trigger,
+por um atributo discriminador de papel vigente ou por uma tabela histórica
+com períodos de vigência. Para a Etapa 1, a equipe preservou o modelo
+relacional fornecido no enunciado e documentou essa limitação.
+
 ## 1. Entidades principais
 
 O projeto representa o Hospital Universitario Dra. Yuska Maritan Brito com as entidades Pessoa, Paciente, Profissional, Residente, Preceptor, Unidade, Escala, Atendimento, Procedimento e Procedimento Realizado.
