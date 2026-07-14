@@ -215,3 +215,99 @@ GROUP BY
 ORDER BY
     media_duracao_minutos DESC,
     residente;
+
+    -- =========================================================
+-- TESTE 9: RANKING DOS RESIDENTES
+-- =========================================================
+
+SELECT
+    DENSE_RANK() OVER (
+        ORDER BY COUNT(atendimento.id_atendimento) DESC
+    ) AS posicao,
+    pessoa.nome AS residente,
+    COUNT(atendimento.id_atendimento) AS total_atendimentos
+FROM residente
+JOIN pessoa
+    ON pessoa.id_pessoa = residente.id_profissional
+LEFT JOIN atendimento
+    ON atendimento.id_residente = residente.id_profissional
+GROUP BY
+    residente.id_profissional,
+    pessoa.nome
+ORDER BY
+    total_atendimentos DESC,
+    residente;
+
+
+-- =========================================================
+-- TESTE 10: PRECEPTORES COM MAIS DE CINCO SUPERVISOES
+-- =========================================================
+
+SELECT
+    pessoa.nome AS preceptor,
+    COUNT(*) AS total_supervisoes
+FROM atendimento
+JOIN pessoa
+    ON pessoa.id_pessoa = atendimento.id_preceptor
+WHERE atendimento.data_hora >= DATE '2026-06-01'
+  AND atendimento.data_hora < DATE '2026-07-01'
+GROUP BY
+    atendimento.id_preceptor,
+    pessoa.nome
+HAVING COUNT(*) > 5
+ORDER BY
+    total_supervisoes DESC,
+    preceptor;
+
+
+-- =========================================================
+-- TESTE 11: PLANTOES DO MES CORRENTE
+-- =========================================================
+
+SELECT
+    unidade.nome AS unidade,
+    pessoa.nome AS residente,
+    COUNT(*) AS quantidade_plantoes
+FROM escala
+JOIN unidade
+    ON unidade.id_unidade = escala.id_unidade
+JOIN pessoa
+    ON pessoa.id_pessoa = escala.id_residente
+WHERE escala.data_plantao >= DATE_TRUNC('month', CURRENT_DATE)
+  AND escala.data_plantao <
+      DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month'
+GROUP BY
+    unidade.id_unidade,
+    unidade.nome,
+    pessoa.id_pessoa,
+    pessoa.nome
+ORDER BY
+    unidade.nome,
+    quantidade_plantoes DESC,
+    residente;
+
+
+-- =========================================================
+-- TESTE 12: PACIENTES SEM PROCEDIMENTO DE RISCO ALTO
+-- =========================================================
+
+SELECT
+    pessoa.id_pessoa AS id_paciente,
+    pessoa.nome AS paciente,
+    paciente.num_convenio
+FROM paciente
+JOIN pessoa
+    ON pessoa.id_pessoa = paciente.id_pessoa
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM atendimento
+    JOIN procedimento_realizado
+        ON procedimento_realizado.id_atendimento =
+           atendimento.id_atendimento
+    JOIN procedimento
+        ON procedimento.id_procedimento =
+           procedimento_realizado.id_procedimento
+    WHERE atendimento.id_paciente = paciente.id_pessoa
+      AND procedimento.nivel_risco = 'ALTO'
+)
+ORDER BY pessoa.nome;
