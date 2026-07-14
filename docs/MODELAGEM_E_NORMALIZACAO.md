@@ -10,6 +10,24 @@ Pessoa e uma entidade generalizada. Paciente e Profissional sao especializacoes 
 
 Profissional tambem e especializado em Residente e Preceptor. A especificacao informa que um profissional pode atuar como preceptor em um periodo e como residente em outro, mantendo historico. Na Etapa 1, o papel atual e representado pelas tabelas `residente` e `preceptor`, sempre ligadas ao mesmo identificador de `profissional`.
 
+### Restrições das especializações
+
+A especialização de Pessoa em Paciente e Profissional é considerada parcial
+e sobreposta. Ela é parcial porque uma pessoa pode ser cadastrada sem possuir
+imediatamente um desses papéis. É sobreposta porque, no domínio hospitalar,
+um profissional também pode ser atendido como paciente.
+
+A especialização de Profissional em Residente e Preceptor é parcial e
+disjunta em relação ao papel vigente. É parcial porque um profissional pode
+ser cadastrado antes da definição do papel. É disjunta porque, em determinado
+momento, um profissional não pode ocupar simultaneamente os papéis de
+residente e preceptor.
+
+A possibilidade de mudança de papel ao longo do tempo pertence ao histórico
+funcional. Como o modelo básico fornecido para a Etapa 1 não contém datas de
+início e fim de vigência dos papéis, a implementação atual representa apenas
+o papel vigente.
+
 ## 3. Cardinalidades
 
 - Pessoa 1:0..1 Paciente: nem toda pessoa precisa ser paciente, mas todo paciente e uma pessoa.
