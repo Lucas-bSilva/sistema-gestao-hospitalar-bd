@@ -172,6 +172,19 @@ psql -d hospital_yuska -f sql/05_all.sql
 As operações CRUD e consultas analíticas devem ser demonstradas
 separadamente pelos arquivos 03, 04 e 07.
 
+ **Observação:** O arquivo 05_all.sql` utiliza os comandos `\i`,
+ que são específicos do cliente `psql`.
+ 
+ Caso a execução seja realizada pelo pgAdmin, os scripts devem ser
+ executados individualmente na seguinte ordem:
+
+ 1. 01_schema.sql`
+ 2. 02_seed.sql`
+ 3. 06_validacoes.sql`
+ 4. 03_crud_consultas.sql`
+ 5. 04_consultas_analiticas.sql`
+ 6. 07_testes_funcionais.sql`
+
 # Massa inicial de dados
 
 O projeto disponibiliza carga mínima superior à exigida pela especificação:
