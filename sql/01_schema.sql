@@ -146,6 +146,20 @@ CREATE TABLE escala (
             )
         ),
 
+    CONSTRAINT ck_escala_data_dia_coerentes
+        CHECK (
+            dia_semana =
+            CASE EXTRACT(ISODOW FROM data_plantao)
+                WHEN 1 THEN 'segunda'
+                WHEN 2 THEN 'terca'
+                WHEN 3 THEN 'quarta'
+                WHEN 4 THEN 'quinta'
+                WHEN 5 THEN 'sexta'
+                WHEN 6 THEN 'sabado'
+                WHEN 7 THEN 'domingo'
+            END
+        ),
+
     CONSTRAINT ck_escala_turno
         CHECK (turno IN ('manha', 'tarde', 'noite')),
 
@@ -168,4 +182,3 @@ CREATE TABLE escala (
             id_residente
         )
 );
-
