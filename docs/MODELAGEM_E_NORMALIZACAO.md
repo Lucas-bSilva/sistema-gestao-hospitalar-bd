@@ -81,9 +81,20 @@ A remocao de procedimento realizado depende de verificar faturamento. Por isso, 
 
 ## 7. Ajuste operacional na tabela ESCALA
 
-A especificação define escala por unidade, dia da semana, turno, residente e preceptor. Para viabilizar a consulta analítica que solicita a quantidade de plantões no mês corrente, foi incluído o atributo `data_plantao`.
+O modelo básico do enunciado representa uma escala pelo dia da semana.
+Entretanto, a consulta analítica da Etapa 1 exige a contagem dos plantões
+no mês corrente. Para que essa consulta pudesse ser implementada de forma
+determinística, foi acrescentado o atributo `data_plantao`.
 
-O campo `dia_semana` foi mantido porque faz parte da regra descrita no enunciado. O campo `data_plantao` permite filtrar o mês corrente sem comprometer a regra original da escala.
+A presença simultânea de `data_plantao` e `dia_semana` constitui uma
+redundância controlada, pois o dia da semana pode ser derivado da data.
+Para impedir divergências, o schema contém a constraint
+`ck_escala_data_dia_coerentes`, que valida se o valor de `dia_semana`
+corresponde à data informada.
+
+O núcleo do modelo permanece normalizado até a 3FN. A tabela ESCALA contém
+essa desnormalização controlada exclusivamente para conciliar a estrutura
+fornecida pelo enunciado com a consulta mensal solicitada.
 
 ## 8. Limitação do histórico de papéis na Etapa 1
 
