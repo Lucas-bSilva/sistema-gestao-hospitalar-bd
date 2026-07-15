@@ -4,16 +4,16 @@
 
 Executar no pgAdmin:
 
-1. `sql/01_schema.sql`
-2. `sql/02_seed.sql`
+1. `sql/01_estrutura.sql`
+2. `sql/02_dados_teste.sql`
 3. `sql/06_validacoes.sql`
 
 ## Localização dos requisitos
 
 | Funcionalidade | Arquivo |
 |---|---|
-| Estrutura, PK, FK e constraints | `sql/01_schema.sql` |
-| Dados de teste | `sql/02_seed.sql` |
+| Estrutura, PK, FK e constraints | `sql/01_estrutura.sql` |
+| Dados de teste | `sql/02_dados_teste.sql` |
 | CRUD e consultas básicas | `sql/03_crud_consultas.sql` |
 | Consultas analíticas | `sql/04_consultas_analiticas.sql` |
 | Conferências | `sql/06_validacoes.sql` |
@@ -33,6 +33,6 @@ Executar no pgAdmin:
 
 Para repetir a demonstração:
 
-1. executar `01_schema.sql`;
-2. executar `02_seed.sql`;
+1. executar `01_estrutura.sql`;
+2. executar `02_dados_teste.sql`;
 3. executar `06_validacoes.sql`.

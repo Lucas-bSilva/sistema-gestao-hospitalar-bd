@@ -117,8 +117,8 @@ sistema-gestao-hospitalar-bd/
 │   └── checklist_etapa1.md
 │
 ├── sql/
-│   ├── 01_schema.sql
-│   ├── 02_seed.sql
+│   ├── 01_estrutura.sql
+│   ├── 02_dados_teste.sql
 │   ├── 03_crud_consultas.sql
 │   ├── 04_consultas_analiticas.sql
 │   ├── 05_all.sql
@@ -151,8 +151,8 @@ hospital_yuska
 Executar os arquivos na seguinte ordem:
 
 ```text
-1. sql/01_schema.sql
-2. sql/02_seed.sql
+1. sql/01_estrutura.sql
+2. sql/02_dados_teste.sql
 3. sql/06_validacoes.sql
 4. sql/03_crud_consultas.sql
 5. sql/04_consultas_analiticas.sql
@@ -174,7 +174,7 @@ separadamente pelos arquivos 03, 04 e 07.
 
  **Observação:** O arquivo 05_all.sql` utiliza os comandos `\i`,
  que são específicos do cliente `psql`.
- 
+
  Caso a execução seja realizada pelo pgAdmin, os scripts devem ser
  executados individualmente na seguinte ordem:
 
