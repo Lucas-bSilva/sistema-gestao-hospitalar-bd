@@ -1,20 +1,3 @@
-/*
-
-Observacao: 
-As operacoes de INSERT, UPDATE e DELETE deste arquivo alteram permanentemente
-a carga do banco.
-
-Para uma demonstracao repetivel, utilizar o arquivo
-07_testes_funcionais.sql, que executa as operacoes dentro de transacoes
-finalizadas com ROLLBACK.
-
-
-----------------------------------------------------------------------------------------------
-CRUD e consultas basicas - Etapa 1
-
-As operacoes abaixo foram separadas por requisito para facilitar a demonstracao.
-No pgAdmin, executar cada bloco completo, sempre ate o ponto e virgula (;).
-*/
 
 -- 1) Inserir novo atendimento validando paciente, residente e preceptor.
 WITH parametros AS (
@@ -60,7 +43,7 @@ SELECT
 FROM validacao
 RETURNING *;
 
--- Conferencia opcional do atendimento inserido.
+-- Conferencia opcional do atendimento inserido. (apenas últimos 3)
 SELECT *
 FROM atendimento
 ORDER BY id_atendimento DESC
@@ -100,7 +83,7 @@ JOIN atendimento
 WHERE atendimento.id_atendimento = 1
 ORDER BY procedimento.nome;
 
--- 4) Atualiza dados de um paciente: endereco e convenio.
+-- 4) Atualiza dados de um paciente: endereco ou convenio.
 UPDATE paciente
 SET
     endereco = 'Rua Atualizada, 123',

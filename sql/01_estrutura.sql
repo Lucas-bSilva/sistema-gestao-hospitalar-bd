@@ -1,7 +1,6 @@
 /*
 
-Cria a estrutura física do banco de dados, incluindo tabelas,
-chaves primárias, chaves estrangeiras e restrições de integridade.
+Cria a estrutura física do banco de dados
 
 As tabelas são removidas em ordem inversa às suas dependências,
 permitindo que o script seja executado novamente durante os testes.

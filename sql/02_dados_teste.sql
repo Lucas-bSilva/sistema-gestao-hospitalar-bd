@@ -2,16 +2,16 @@
 Dados de teste - Etapa 1
 
 A carga abaixo atende aos minimos solicitados:
-- 5 pacientes
-- 5 residentes
-- 5 preceptores
+- 5 pacientes  (posicao 1 a 5 da tabela abaixo)
+- 5 residentes (posicao 6 a 10 da tabela abaixo)
+- 5 preceptores (posicao 11 a 15 da tabela abaixo)
 - 4 unidades
 - 12 atendimentos
 - 12 procedimentos realizados
 */
 
 INSERT INTO pessoa (nome, cpf, data_nascimento, is_flamengo, telefone) VALUES
-('Ana Clara Souza', '11111111111', '1995-03-10', TRUE,  '81990000001'),
+('Ana Clara Souza', '11111111111', '1995-03-10', TRUE,  '81990000001'),          
 ('Bruno Henrique Lima', '22222222222', '1988-07-22', FALSE, '81990000002'),
 ('Carla Mendes Rocha', '33333333333', '2001-01-15', TRUE,  '81990000003'),
 ('Diego Alves Martins', '44444444444', '1979-11-30', FALSE, '81990000004'),

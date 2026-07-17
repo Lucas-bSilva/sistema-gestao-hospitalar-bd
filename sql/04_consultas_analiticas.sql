@@ -1,7 +1,3 @@
-/*
-Consultas analiticas - Etapa 1
-
-*/
 
 -- 1) Ranking dos residentes por numero de atendimentos realizados.
 SELECT
