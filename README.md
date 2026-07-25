@@ -1,120 +1,54 @@
 # Sistema de Gestão Hospitalar Dra. Yuska — Etapa 1
 
-Projeto acadêmico desenvolvido para a disciplina de Banco de Dados, utilizando PostgreSQL e SQL puro, sem uso de ORM, conforme os requisitos da Etapa 1 do Sistema de Gestão Hospitalar Dra. Yuska Maritan Brito.
+Projeto acadêmico desenvolvido para a disciplina de Banco de Dados com o objetivo de modelar e implementar um sistema de gestão hospitalar utilizando PostgreSQL e SQL puro.
 
-## Objetivo da Etapa 1
+A Etapa 1 contempla a modelagem conceitual, lógica e física do banco, a normalização até a Terceira Forma Normal, a implementação das tabelas e restrições de integridade, a carga de dados, as operações CRUD e as consultas analíticas solicitadas na especificação.
 
-Implementar:
+> Nesta etapa não foi utilizada ORM. A migração para SQLAlchemy e a implementação das funcionalidades avançadas pertencem à Etapa 2.
+
+---
+
+## Objetivos da Etapa 1
+
+A implementação contempla:
 
 - modelagem conceitual, lógica e física;
-- normalização até a 3FN;
-- criação das tabelas com restrições de integridade;
-- carga inicial de dados;
+- elaboração e documentação do DER;
+- normalização até a Terceira Forma Normal;
+- criação das tabelas e relacionamentos;
+- definição de chaves primárias e estrangeiras;
+- implementação de restrições `CHECK`, `NOT NULL` e `UNIQUE`;
+- inserção de dados para testes;
 - operações CRUD utilizando SQL puro;
-- consultas analíticas utilizando agregações e junções;
-- documentação técnica e evidências de validação.
+- consultas básicas e analíticas;
+- validações automáticas da estrutura e da carga;
+- testes funcionais utilizando transações e `ROLLBACK`.
 
 ---
 
-# Tecnologias utilizadas
+## Tecnologias utilizadas
 
-- PostgreSQL 14 ou superior
-- pgAdmin 4
-- Visual Studio Code
-- Git
-- GitHub
-- Graphviz (para geração e atualização do DER)
-
----
-
-# Requisitos para execução
-
-Antes de executar os scripts, é necessário possuir instalado:
-
-## PostgreSQL
-
-Download:
-
-https://www.postgresql.org/download/
-
-Durante a instalação:
-
-- instalar o servidor PostgreSQL;
-- instalar o pgAdmin 4;
-- definir uma senha para o usuário `postgres`.
+- PostgreSQL 14 ou superior;
+- pgAdmin 4;
+- Visual Studio Code;
+- Git;
+- GitHub;
+- Graphviz para geração e atualização do DER.
 
 ---
 
-## pgAdmin 4
-
-Utilizado para:
-
-- criação do banco;
-- execução dos scripts SQL;
-- demonstração das consultas durante a apresentação.
-
----
-
-## Git
-
-Download:
-
-https://git-scm.com/downloads
-
-Necessário para:
-
-- versionamento;
-- colaboração em equipe;
-- controle dos commits da disciplina.
-
----
-
-## Visual Studio Code
-
-Download:
-
-https://code.visualstudio.com/
-
-Extensões recomendadas:
-
-- PostgreSQL
-- SQLTools
-- GitLens
-- Markdown Preview
-
----
-
-## Graphviz
-
-Necessário apenas para atualização do DER a partir do arquivo `.dot`.
-
-Download:
-
-https://graphviz.org/download/
-
-Verificação da instalação:
-
-```powershell
-dot -V
-```
-
----
-
-# Estrutura do projeto
+## Estrutura do projeto
 
 ```text
 sistema-gestao-hospitalar-bd/
+│
 ├── diagrams/
 │   └── der.dot
 │
 ├── docs/
 │   ├── DER_SGH_Dra_Yuska.pdf
 │   ├── MODELAGEM_E_NORMALIZACAO.md
-│   ├── ROTEIRO_APRESENTACAO.md
-│   └── CODIGO_COMPLETO_POR_ARQUIVO.md
-│
-├── evidencias/
-│   └── checklist_etapa1.md
+│   └── ROTEIRO_APRESENTACAO.md
 │
 ├── sql/
 │   ├── 01_estrutura.sql
@@ -129,68 +63,194 @@ sistema-gestao-hospitalar-bd/
 └── README.md
 ```
 
+Os scripts da pasta `sql/` são as fontes oficiais do código do banco de dados.
+
 ---
 
-# Criação do banco
+## Resumo do modelo de dados
+
+O sistema utiliza a entidade `pessoa` como base para os dados comuns de pacientes e profissionais.
+
+```text
+Pessoa
+├── Paciente
+└── Profissional
+    ├── Residente
+    └── Preceptor
+```
+
+As principais relações implementadas são:
+
+- um paciente pode possuir vários atendimentos;
+- um residente pode realizar vários atendimentos;
+- um preceptor pode supervisionar vários atendimentos;
+- cada atendimento possui exatamente um paciente, um residente e um preceptor;
+- um atendimento pode possuir vários procedimentos;
+- um procedimento pode ser realizado em vários atendimentos;
+- `procedimento_realizado` resolve o relacionamento muitos-para-muitos;
+- uma unidade pode possuir várias escalas de plantão;
+- cada escala relaciona unidade, data, turno, residente e preceptor.
+
+---
+
+## Responsabilidade dos scripts SQL
+
+| Arquivo            | Responsabilidade |
+
+| `01_estrutura.sql` | Recria as tabelas, chaves, relacionamentos e restrições |
+| `02_dados_teste.sql` | Insere a massa inicial utilizada nas demonstrações |
+| `03_crud_consultas.sql` | Contém operações CRUD e consultas básicas |
+| `04_consultas_analiticas.sql` | Contém as quatro consultas analíticas da especificação |
+| `05_all.sql` | Automatiza a preparação do banco pelo cliente `psql` |
+| `06_validacoes.sql` | Valida carga mínima, constraints e consistência dos dados |
+| `07_testes_funcionais.sql` | Demonstra operações com transações finalizadas por `ROLLBACK` |
+
+---
+
+## Requisitos para execução
+
+### PostgreSQL
+
+É necessário possuir o PostgreSQL 14 ou uma versão superior.
+
+Download:
+
+https://www.postgresql.org/download/
+
+Durante a instalação:
+
+- instalar o servidor PostgreSQL;
+- instalar o pgAdmin 4;
+- definir uma senha para o usuário `postgres`.
+
+### pgAdmin 4
+
+Utilizado para:
+
+- criação do banco;
+- execução dos scripts SQL;
+- inspeção das tabelas;
+- demonstração das consultas.
+
+### Git
+
+Download:
+
+https://git-scm.com/downloads
+
+Utilizado para:
+
+- versionamento do projeto;
+- colaboração entre os integrantes;
+- registro dos commits acadêmicos.
+
+### Visual Studio Code
+
+Download:
+
+https://code.visualstudio.com/
+
+Extensões recomendadas:
+
+- PostgreSQL;
+- SQLTools;
+- GitLens;
+- Markdown Preview.
+
+### Graphviz
+
+Necessário somente para atualizar o DER a partir do arquivo `diagrams/der.dot`.
+
+Download:
+
+https://graphviz.org/download/
+
+Verificação da instalação:
+
+```powershell
+dot -V
+```
+
+---
+
+## Criação do banco
 
 No pgAdmin:
 
-1. conectar ao PostgreSQL;
-2. criar o banco:
+1. conecte-se ao servidor PostgreSQL;
+2. clique com o botão direito em `Databases`;
+3. selecione `Create` e depois `Database`;
+4. crie o banco com o nome:
 
 ```text
 hospital_yuska
 ```
 
-3. abrir o Query Tool desse banco.
+5. selecione o banco criado;
+6. abra o `Query Tool`.
 
 ---
 
-# Ordem de execução recomendada
+## Execução pelo pgAdmin
 
-Executar os arquivos na seguinte ordem:
+### Preparação do banco
+
+Execute integralmente, nesta ordem:
 
 ```text
 1. sql/01_estrutura.sql
 2. sql/02_dados_teste.sql
 3. sql/06_validacoes.sql
+```
+
+O arquivo `01_estrutura.sql` remove e recria as tabelas. Sua execução elimina os dados existentes, portanto o arquivo `02_dados_teste.sql` deve ser executado em seguida.
+
+### Demonstração das funcionalidades
+
+Depois da preparação:
+
+```text
 4. sql/03_crud_consultas.sql
 5. sql/04_consultas_analiticas.sql
 6. sql/07_testes_funcionais.sql
 ```
 
+Os arquivos `03` e `04` devem ser executados por blocos, selecionando cada consulta até o respectivo ponto e vírgula.
+
+O arquivo `03_crud_consultas.sql` contém comandos que alteram permanentemente os dados, como `INSERT`, `UPDATE` e `DELETE`.
+
+Para uma demonstração repetível, recomenda-se utilizar o arquivo `07_testes_funcionais.sql`, pois suas alterações são executadas em transações finalizadas com `ROLLBACK`.
+
 ---
 
-# Preparação automatizada utilizando psql
+## Preparação automatizada com `psql`
 
-O arquivo `sql/05_all.sql` recria a estrutura, insere a carga inicial
-e executa as validações:
+O arquivo `sql/05_all.sql` executa automaticamente:
+
+```text
+01_estrutura.sql
+02_dados_teste.sql
+06_validacoes.sql
+```
+
+A partir da raiz do repositório, execute:
 
 ```powershell
-psql -d hospital_yuska -f sql/05_all.sql
+psql -U postgres -d hospital_yuska -f sql/05_all.sql
+```
 
-As operações CRUD e consultas analíticas devem ser demonstradas
-separadamente pelos arquivos 03, 04 e 07.
+> O arquivo `05_all.sql` utiliza comandos `\i`, que pertencem ao cliente `psql`. Esses comandos não devem ser executados diretamente no Query Tool do pgAdmin.
 
- **Observação:** O arquivo 05_all.sql` utiliza os comandos `\i`,
- que são específicos do cliente `psql`.
+As operações CRUD e as consultas analíticas continuam sendo demonstradas separadamente pelos arquivos `03`, `04` e `07`.
 
- Caso a execução seja realizada pelo pgAdmin, os scripts devem ser
- executados individualmente na seguinte ordem:
+---
 
- 1. 01_schema.sql`
- 2. 02_seed.sql`
- 3. 06_validacoes.sql`
- 4. 03_crud_consultas.sql`
- 5. 04_consultas_analiticas.sql`
- 6. 07_testes_funcionais.sql`
+## Massa inicial de dados
 
-# Massa inicial de dados
-
-O projeto disponibiliza carga mínima superior à exigida pela especificação:
+O projeto disponibiliza uma carga superior ao mínimo exigido na especificação:
 
 | Entidade | Quantidade |
-|---------|------------|
+|---|---:|
 | Pacientes | 5 |
 | Residentes | 5 |
 | Preceptores | 5 |
@@ -198,130 +258,151 @@ O projeto disponibiliza carga mínima superior à exigida pela especificação:
 | Procedimentos | 6 |
 | Atendimentos | 12 |
 | Procedimentos realizados | 12 |
+| Escalas | 8 |
+
+A ordem das inserções respeita as dependências entre as chaves estrangeiras:
+
+```text
+pessoa
+→ paciente e profissional
+→ residente e preceptor
+→ unidade e procedimento
+→ atendimento
+→ procedimento_realizado
+→ escala
+```
+
+As escalas são criadas dentro do mês corrente para garantir resultados na consulta mensal solicitada pela especificação.
 
 ---
 
-# Restrições implementadas
+## Restrições de integridade
 
 O banco utiliza:
 
-- PRIMARY KEY;
-- FOREIGN KEY;
-- UNIQUE;
-- CHECK;
-- NOT NULL;
-- integridade referencial completa entre todas as tabelas.
+- `PRIMARY KEY`;
+- `FOREIGN KEY`;
+- `NOT NULL`;
+- `UNIQUE`;
+- `CHECK`;
+- valores padrão com `DEFAULT`;
+- ações referenciais com `ON DELETE CASCADE`;
+- ações referenciais com `ON DELETE RESTRICT`.
 
-Exemplos:
+Entre as regras implementadas estão:
 
+- CPF composto por exatamente 11 dígitos;
 - CPF único por pessoa;
 - CRM único por profissional;
-- combinação única de escala;
-- valores válidos para ano da residência;
-- valores válidos para turno;
-- duração dos atendimentos maior que zero.
+- grupos sanguíneos limitados aos valores válidos;
+- ano de residência limitado a `R1`, `R2` ou `R3`;
+- tipos de unidade controlados;
+- capacidade de leitos não negativa;
+- duração dos atendimentos maior que zero;
+- quantidade e tempo dos procedimentos maiores que zero;
+- residente e preceptor distintos no atendimento;
+- turnos limitados a manhã, tarde ou noite;
+- coerência entre a data do plantão e o dia da semana;
+- prevenção de escalas duplicadas.
 
 ---
 
-# Funcionalidades implementadas
-
 ## CRUD e consultas básicas
 
-Implementadas em:
+As operações estão implementadas em:
 
 ```text
 sql/03_crud_consultas.sql
 ```
 
-### Inserção de atendimento
+### Inserção validada de atendimento
 
-Realiza validação da existência de:
+Antes da inserção, o script verifica a existência de:
 
 - paciente;
 - residente;
 - preceptor.
 
----
+A operação utiliza CTEs e `EXISTS`. O atendimento somente é inserido quando todas as referências são válidas.
 
-### Consulta de atendimentos por paciente
+### Atendimentos de um paciente
 
 Lista:
 
-- data;
-- horário;
-- residente responsável;
-- preceptor supervisor.
+- identificador do atendimento;
+- data e horário;
+- duração;
+- paciente;
+- residente;
+- preceptor.
 
-Ordenação:
+Os resultados são ordenados cronologicamente.
 
-```text
-mais antigo → mais recente
-```
-
----
-
-### Consulta dos procedimentos realizados
+### Procedimentos de um atendimento
 
 Exibe:
 
+- código;
 - nome do procedimento;
 - quantidade;
-- tempo real gasto;
-- observações.
+- tempo real;
+- observação.
 
----
+### Atualização de paciente
 
-### Atualização de dados do paciente
-
-Permite atualização de:
+Permite modificar:
 
 - endereço;
 - número do convênio.
 
----
+### Remoção condicionada
 
-### Remoção controlada de procedimentos
-
-A remoção somente ocorre quando:
+Um procedimento realizado somente pode ser removido quando:
 
 ```text
 faturado = FALSE
 ```
 
----
+### Média de duração por residente
 
-### Tempo médio dos atendimentos
+Calcula:
 
-Calculado por residente utilizando:
+- duração média dos atendimentos;
+- total de atendimentos por residente.
+
+São utilizadas as funções:
 
 ```sql
 AVG()
+COUNT()
+ROUND()
 GROUP BY
 ```
 
 ---
 
-# Consultas analíticas
+## Consultas analíticas
 
-Implementadas em:
+As consultas estão implementadas em:
 
 ```text
 sql/04_consultas_analiticas.sql
 ```
 
-Foram implementadas:
+### Ranking dos residentes
 
-## Ranking dos residentes
+Classifica os residentes pelo número de atendimentos realizados.
 
 Utiliza:
 
 ```sql
+COUNT()
 DENSE_RANK()
 ```
 
----
+### Preceptores com mais de cinco supervisões
 
-## Preceptores com mais de cinco supervisões
+Identifica preceptores que supervisionaram mais de cinco atendimentos no período definido.
 
 Utiliza:
 
@@ -330,15 +411,22 @@ GROUP BY
 HAVING
 ```
 
----
+### Plantões por residente e unidade
 
-## Quantidade de plantões por unidade
+Calcula a quantidade de plantões no mês corrente, agrupando os dados por unidade e residente.
 
-Filtra automaticamente o mês corrente.
+Utiliza:
 
----
+```sql
+DATE_TRUNC()
+CURRENT_DATE
+COUNT()
+GROUP BY
+```
 
-## Pacientes sem procedimentos de risco alto
+### Pacientes sem procedimento de risco alto
+
+Lista os pacientes que nunca realizaram procedimentos classificados como `ALTO`.
 
 Utiliza:
 
@@ -348,9 +436,9 @@ NOT EXISTS
 
 ---
 
-# Testes funcionais
+## Testes funcionais
 
-Implementados em:
+Os testes estão implementados em:
 
 ```text
 sql/07_testes_funcionais.sql
@@ -358,48 +446,54 @@ sql/07_testes_funcionais.sql
 
 Características:
 
-- utilização de transações;
-- utilização de `ROLLBACK`;
-- repetibilidade dos testes;
-- preservação da carga inicial do banco.
+- utilização de `BEGIN`;
+- execução de operações de inserção, atualização e remoção;
+- conferência dos resultados;
+- finalização com `ROLLBACK`;
+- preservação da massa inicial;
+- possibilidade de repetir os testes.
 
 ---
 
-# Documentação da modelagem
+## Validação da Etapa 1
 
-Disponível em:
+O arquivo:
 
 ```text
-docs/MODELAGEM_E_NORMALIZACAO.md
+sql/06_validacoes.sql
 ```
 
-Contém:
+verifica:
 
-- justificativas das cardinalidades;
-- justificativas das especializações;
-- evidência de normalização até a 3FN;
-- adequações realizadas para atender aos requisitos da etapa.
+- quantidade mínima de pacientes;
+- quantidade mínima de residentes;
+- quantidade mínima de preceptores;
+- quantidade mínima de unidades;
+- quantidade mínima de atendimentos;
+- quantidade mínima de procedimentos realizados;
+- constraints existentes no schema;
+- sobreposição indevida entre residente e preceptor;
+- duplicidades de escala.
+
+Na validação da carga, o resultado esperado é:
+
+```text
+OK
+```
+
+Nas consultas de inconsistência, o resultado esperado é:
+
+```text
+0 linhas
+```
 
 ---
 
-# Campos complementares adicionados
+## Documentação da modelagem
 
-Alguns requisitos da especificação exigiram atributos adicionais ao modelo relacional base.
+### DER
 
-Foram adicionados:
-
-| Campo | Motivo |
-|------|--------|
-| paciente.endereco | atualização de endereço do paciente |
-| procedimento.nivel_risco | consulta de risco ALTO |
-| procedimento_realizado.faturado | remoção condicionada |
-| escala.data_plantao | filtragem do mês corrente |
-
----
-
-# DER
-
-Arquivo:
+Versão em PDF:
 
 ```text
 docs/DER_SGH_Dra_Yuska.pdf
@@ -411,41 +505,87 @@ Fonte editável:
 diagrams/der.dot
 ```
 
-Atualização do DER:
+Para gerar novamente o PDF:
 
 ```powershell
 dot -Tpdf diagrams\der.dot -o docs\DER_SGH_Dra_Yuska.pdf
 ```
 
----
+### Modelo relacional e normalização
 
-# Validação da carga inicial
-
-Arquivo:
+Disponível em:
 
 ```text
-sql/06_validacoes.sql
+docs/MODELAGEM_E_NORMALIZACAO.md
 ```
 
-Valida automaticamente:
+O documento apresenta:
 
-- quantidade mínima de pacientes;
-- quantidade mínima de residentes;
-- quantidade mínima de preceptores;
-- quantidade mínima de unidades;
-- quantidade mínima de atendimentos;
-- quantidade mínima de procedimentos realizados.
+- justificativas das cardinalidades;
+- especializações de pessoa e profissional;
+- transformação do DER para o modelo relacional;
+- análise das dependências funcionais;
+- justificativa da normalização até a Terceira Forma Normal;
+- decisões adotadas para cumprir a especificação.
 
----
+### Roteiro de apresentação
 
-# Restauração do ambiente
-
-Para retornar ao estado inicial do banco:
+Disponível em:
 
 ```text
-1. Executar sql/01_schema.sql
-2. Executar sql/02_seed.sql
-3. Executar sql/06_validacoes.sql
+docs/ROTEIRO_APRESENTACAO.md
+```
+
+Contém a sequência utilizada para demonstrar a modelagem, a implementação, as validações, o CRUD e as consultas analíticas.
+
+---
+
+## Campos complementares
+
+Alguns requisitos exigiram atributos complementares ao modelo relacional inicial:
+
+| Campo | Justificativa |
+|---|---|
+| `paciente.endereco` | Permitir a atualização do endereço |
+| `procedimento.nivel_risco` | Identificar procedimentos de risco `ALTO` |
+| `procedimento_realizado.faturado` | Controlar a remoção de procedimentos faturados |
+| `escala.data_plantao` | Permitir consultas referentes ao mês corrente |
+
+Esses campos mantêm coerência com o contexto do sistema e viabilizam as operações exigidas.
+
+---
+
+## Restauração do ambiente
+
+Para retornar o banco ao estado inicial:
+
+```text
+1. executar sql/01_estrutura.sql;
+2. executar sql/02_dados_teste.sql;
+3. executar sql/06_validacoes.sql.
+```
+
+Também é possível utilizar:
+
+```powershell
+psql -U postgres -d hospital_yuska -f sql/05_all.sql
 ```
 
 ---
+
+## Situação da Etapa 1
+
+A Etapa 1 encontra-se concluída, contemplando:
+
+- modelagem;
+- normalização;
+- implementação física;
+- carga de dados;
+- operações CRUD;
+- consultas básicas;
+- consultas analíticas;
+- validações;
+- testes funcionais;
+- documentação técnica.
+
+As funcionalidades avançadas, incluindo procedures, triggers, views, ORM e tratamento de concorrência, serão implementadas separadamente na Etapa 2.

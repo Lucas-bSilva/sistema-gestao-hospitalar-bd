@@ -17,7 +17,7 @@ ORDER BY
     residente;
 
 -- 2) Preceptores que supervisionaram mais de 5 atendimentos em determinado mes.
--- O periodo foi definido de acordo com a carga de teste do arquivo 02_seed.sql.
+-- O periodo foi definido de acordo com a carga de teste do arquivo 02_dados_teste.sql.
 WITH periodo AS (
     SELECT
         DATE '2026-06-01' AS data_inicial,
