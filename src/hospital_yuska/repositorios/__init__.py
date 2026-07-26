@@ -1,0 +1,1 @@
+"""Operações da Etapa 1 reimplementadas com SQLAlchemy."""
