@@ -2,3 +2,28 @@ __pycache__/
 *.pyc
 .vscode/
 .env
+# Ambiente Python
+.venv/
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# Arquivos locais
+.env
+
+# Cache Python
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+# Configurações locais e credenciais
+.env
+.venv/
+
+# Arquivos temporários do Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
