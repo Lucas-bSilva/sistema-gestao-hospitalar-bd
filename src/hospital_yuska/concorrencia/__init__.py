@@ -1,0 +1,1 @@
+"""Controle de concorrência aplicado às escalas hospitalares."""

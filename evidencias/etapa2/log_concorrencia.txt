@@ -1,0 +1,7 @@
+2026-07-26 18:19:53,673 | Transação A | Iniciando transação.
+2026-07-26 18:19:53,699 | Transação A | Transação rejeitada: (psycopg.errors.UndefinedColumn) coluna "supervisao_ativa" da relação "escala" não existe
+LINE 1: ...o, dia_semana, turno, id_residente, id_preceptor, supervisao...
+                                                             ^
+[SQL: INSERT INTO escala (id_unidade, data_plantao, dia_semana, turno, id_residente, id_preceptor, supervisao_ativa) VALUES (%(id_unidade)s::BIGINT, %(data_plantao)s::DATE, %(dia_semana)s::VARCHAR, %(turno)s::VARCHAR, %(id_residente)s::BIGINT, %(id_preceptor)s::BIGINT, %(supervisao_ativa)s) RETURNING escala.id_escala]
+[parameters: {'id_unidade': 1, 'data_plantao': datetime.date(2026, 9, 24), 'dia_semana': 'quinta', 'turno': 'manha', 'id_residente': 6, 'id_preceptor': 11, 'supervisao_ativa': True}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
