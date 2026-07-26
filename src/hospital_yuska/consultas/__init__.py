@@ -1,0 +1,1 @@
+"""Consultas avançadas implementadas com a DSL do SQLAlchemy."""
