@@ -3,8 +3,13 @@ Stored procedures da Etapa 2.
 
 As procedures não executam COMMIT internamente. A atomicidade é garantida
 pela transação do comando CALL ou pela transação aberta pelo chamador.
-Qualquer exceção desfaz todas as alterações realizadas pela chamada.
+Qualquer exceção desfaz as alterações realizadas pela chamada.
 */
+
+
+/* ============================================================
+   1. Registra atendimento e procedimentos na mesma transação
+   ============================================================ */
 
 CREATE OR REPLACE PROCEDURE sp_registrar_atendimento_completo(
     p_data_hora         TIMESTAMP,
@@ -25,42 +30,67 @@ DECLARE
     v_tempo_real       INTEGER;
     v_inicio           TIMESTAMP;
 BEGIN
-    IF p_duracao_minutos <= 0 THEN
-        RAISE EXCEPTION 'A duração do atendimento deve ser positiva.';
+    IF p_data_hora IS NULL THEN
+        RAISE EXCEPTION
+            'A data e o horário do atendimento são obrigatórios.';
+    END IF;
+
+    IF p_duracao_minutos IS NULL
+       OR p_duracao_minutos <= 0 THEN
+        RAISE EXCEPTION
+            'A duração do atendimento deve ser positiva.';
     END IF;
 
     IF p_id_residente = p_id_preceptor THEN
-        RAISE EXCEPTION 'Residente e preceptor devem ser pessoas distintas.';
+        RAISE EXCEPTION
+            'Residente e preceptor devem ser profissionais distintos.';
     END IF;
 
     IF NOT EXISTS (
-        SELECT 1 FROM paciente WHERE id_pessoa = p_id_paciente
+        SELECT 1
+        FROM paciente
+        WHERE id_pessoa = p_id_paciente
     ) THEN
-        RAISE EXCEPTION 'Paciente % não encontrado.', p_id_paciente;
+        RAISE EXCEPTION
+            'Paciente % não encontrado.',
+            p_id_paciente;
     END IF;
 
     IF NOT EXISTS (
-        SELECT 1 FROM residente WHERE id_profissional = p_id_residente
+        SELECT 1
+        FROM residente
+        WHERE id_profissional = p_id_residente
     ) THEN
-        RAISE EXCEPTION 'Residente % não encontrado.', p_id_residente;
+        RAISE EXCEPTION
+            'Residente % não encontrado.',
+            p_id_residente;
     END IF;
 
     IF NOT EXISTS (
-        SELECT 1 FROM preceptor WHERE id_profissional = p_id_preceptor
+        SELECT 1
+        FROM preceptor
+        WHERE id_profissional = p_id_preceptor
     ) THEN
-        RAISE EXCEPTION 'Preceptor % não encontrado.', p_id_preceptor;
+        RAISE EXCEPTION
+            'Preceptor % não encontrado.',
+            p_id_preceptor;
     END IF;
 
     IF NOT EXISTS (
-        SELECT 1 FROM unidade WHERE id_unidade = p_id_unidade
+        SELECT 1
+        FROM unidade
+        WHERE id_unidade = p_id_unidade
     ) THEN
-        RAISE EXCEPTION 'Unidade % não encontrada.', p_id_unidade;
+        RAISE EXCEPTION
+            'Unidade % não encontrada.',
+            p_id_unidade;
     END IF;
 
     IF p_procedimentos IS NULL
-       OR jsonb_typeof(p_procedimentos) <> 'array'
-       OR jsonb_array_length(p_procedimentos) = 0 THEN
-        RAISE EXCEPTION 'Informe ao menos um procedimento em um array JSON.';
+       OR JSONB_TYPEOF(p_procedimentos) <> 'array'
+       OR JSONB_ARRAY_LENGTH(p_procedimentos) = 0 THEN
+        RAISE EXCEPTION
+            'Informe ao menos um procedimento em um array JSON.';
     END IF;
 
     INSERT INTO atendimento (
@@ -79,21 +109,34 @@ BEGIN
         p_id_preceptor,
         p_id_unidade
     )
-    RETURNING id_atendimento INTO v_id_atendimento;
+    RETURNING id_atendimento
+    INTO v_id_atendimento;
 
     FOR v_item IN
         SELECT valor
-        FROM jsonb_array_elements(p_procedimentos) AS itens(valor)
+        FROM JSONB_ARRAY_ELEMENTS(p_procedimentos)
+            AS itens(valor)
     LOOP
         v_id_procedimento := NULLIF(
-            v_item ->> 'id_procedimento', ''
+            v_item ->> 'id_procedimento',
+            ''
         )::BIGINT;
-        v_quantidade := NULLIF(v_item ->> 'quantidade', '')::INTEGER;
-        v_tempo_real := NULLIF(
-            v_item ->> 'tempo_real_minutos', ''
+
+        v_quantidade := NULLIF(
+            v_item ->> 'quantidade',
+            ''
         )::INTEGER;
+
+        v_tempo_real := NULLIF(
+            v_item ->> 'tempo_real_minutos',
+            ''
+        )::INTEGER;
+
         v_inicio := COALESCE(
-            NULLIF(v_item ->> 'data_hora_inicio', '')::TIMESTAMP,
+            NULLIF(
+                v_item ->> 'data_hora_inicio',
+                ''
+            )::TIMESTAMP,
             p_data_hora
         );
 
@@ -104,7 +147,8 @@ BEGIN
                 'Cada item deve informar id_procedimento, quantidade e tempo_real_minutos.';
         END IF;
 
-        IF v_quantidade <= 0 OR v_tempo_real <= 0 THEN
+        IF v_quantidade <= 0
+           OR v_tempo_real <= 0 THEN
             RAISE EXCEPTION
                 'Quantidade e tempo real devem ser positivos no procedimento %.',
                 v_id_procedimento;
@@ -112,7 +156,7 @@ BEGIN
 
         IF v_inicio < p_data_hora THEN
             RAISE EXCEPTION
-                'O início do procedimento % não pode anteceder a chegada.',
+                'O procedimento % não pode iniciar antes do atendimento.',
                 v_id_procedimento;
         END IF;
 
@@ -122,7 +166,8 @@ BEGIN
             WHERE id_procedimento = v_id_procedimento
         ) THEN
             RAISE EXCEPTION
-                'Procedimento % não encontrado.', v_id_procedimento;
+                'Procedimento % não encontrado.',
+                v_id_procedimento;
         END IF;
 
         INSERT INTO procedimento_realizado (
@@ -140,35 +185,52 @@ BEGIN
             v_quantidade,
             v_tempo_real,
             v_item ->> 'observacao',
-            COALESCE((v_item ->> 'faturado')::BOOLEAN, FALSE),
+
+            COALESCE(
+                (v_item ->> 'faturado')::BOOLEAN,
+                FALSE
+            ),
+
             v_inicio
         );
     END LOOP;
 
     RAISE NOTICE
-        'Atendimento % registrado com sucesso.', v_id_atendimento;
+        'Atendimento % registrado com sucesso.',
+        v_id_atendimento;
 END;
 $$;
 
 
+/* ============================================================
+   2. Calcula o tempo médio de espera por unidade
+   ============================================================ */
+
 CREATE OR REPLACE PROCEDURE sp_calcular_tempo_medio_espera(
-    INOUT p_resultado REFCURSOR DEFAULT 'resultado_tempo_espera'
+    INOUT p_resultado REFCURSOR
+        DEFAULT 'resultado_tempo_espera'
 )
 LANGUAGE plpgsql
 AS $$
 BEGIN
     OPEN p_resultado FOR
+
         WITH primeiro_procedimento AS (
             SELECT
                 id_atendimento,
                 MIN(data_hora_inicio) AS primeiro_inicio
+
             FROM procedimento_realizado
+
             WHERE data_hora_inicio IS NOT NULL
+
             GROUP BY id_atendimento
         )
+
         SELECT
             u.id_unidade,
             u.nome AS unidade,
+
             ROUND(
                 AVG(
                     EXTRACT(
@@ -179,26 +241,36 @@ BEGIN
                 )::NUMERIC,
                 2
             ) AS media_espera_minutos,
+
             COUNT(*) AS atendimentos_considerados
+
         FROM atendimento a
+
         JOIN unidade u
             ON u.id_unidade = a.id_unidade
+
         JOIN primeiro_procedimento pp
             ON pp.id_atendimento = a.id_atendimento
+
         GROUP BY
             u.id_unidade,
             u.nome
+
         ORDER BY u.nome;
 END;
 $$;
 
 
+/* ============================================================
+   3. Reajusta as escalas de um residente
+   ============================================================ */
+
 CREATE OR REPLACE PROCEDURE sp_reajustar_escala(
-    p_id_residente       BIGINT,
-    p_dia_origem         VARCHAR,
-    p_turno_origem       VARCHAR,
-    p_dia_destino        VARCHAR,
-    p_turno_destino      VARCHAR
+    p_id_residente   BIGINT,
+    p_dia_origem     VARCHAR,
+    p_turno_origem   VARCHAR,
+    p_dia_destino    VARCHAR,
+    p_turno_destino  VARCHAR
 )
 LANGUAGE plpgsql
 AS $$
@@ -207,18 +279,39 @@ DECLARE
     v_total_alterado  INTEGER;
 BEGIN
     IF p_dia_origem NOT IN (
-        'segunda', 'terca', 'quarta', 'quinta',
-        'sexta', 'sabado', 'domingo'
-    ) OR p_dia_destino NOT IN (
-        'segunda', 'terca', 'quarta', 'quinta',
-        'sexta', 'sabado', 'domingo'
+        'segunda',
+        'terca',
+        'quarta',
+        'quinta',
+        'sexta',
+        'sabado',
+        'domingo'
+    )
+    OR p_dia_destino NOT IN (
+        'segunda',
+        'terca',
+        'quarta',
+        'quinta',
+        'sexta',
+        'sabado',
+        'domingo'
     ) THEN
-        RAISE EXCEPTION 'Dia da semana inválido.';
+        RAISE EXCEPTION
+            'Dia da semana inválido.';
     END IF;
 
-    IF p_turno_origem NOT IN ('manha', 'tarde', 'noite')
-       OR p_turno_destino NOT IN ('manha', 'tarde', 'noite') THEN
-        RAISE EXCEPTION 'Turno inválido.';
+    IF p_turno_origem NOT IN (
+        'manha',
+        'tarde',
+        'noite'
+    )
+    OR p_turno_destino NOT IN (
+        'manha',
+        'tarde',
+        'noite'
+    ) THEN
+        RAISE EXCEPTION
+            'Turno inválido.';
     END IF;
 
     v_isodow_destino := CASE p_dia_destino
@@ -231,7 +324,7 @@ BEGIN
         WHEN 'domingo' THEN 7
     END;
 
-    -- Bloqueia as escalas de origem até o término da transação.
+    -- Bloqueia as escalas que serão alteradas até o fim da transação.
     PERFORM 1
     FROM escala
     WHERE id_residente = p_id_residente
@@ -247,22 +340,33 @@ BEGIN
             p_turno_origem;
     END IF;
 
+    -- Calcula as datas de destino e verifica possíveis conflitos.
     IF EXISTS (
         WITH destinos AS (
             SELECT
                 e.id_escala,
+
                 (
                     e.data_plantao
-                    - (EXTRACT(ISODOW FROM e.data_plantao)::INTEGER - 1)
+                    - (
+                        EXTRACT(
+                            ISODOW FROM e.data_plantao
+                        )::INTEGER - 1
+                    )
                     + (v_isodow_destino - 1)
                 )::DATE AS nova_data
+
             FROM escala e
+
             WHERE e.id_residente = p_id_residente
               AND e.dia_semana = p_dia_origem
               AND e.turno = p_turno_origem
         )
+
         SELECT 1
+
         FROM destinos d
+
         JOIN escala existente
             ON existente.id_residente = p_id_residente
            AND existente.data_plantao = d.nova_data
@@ -278,16 +382,23 @@ BEGIN
     SET
         data_plantao = (
             e.data_plantao
-            - (EXTRACT(ISODOW FROM e.data_plantao)::INTEGER - 1)
+            - (
+                EXTRACT(
+                    ISODOW FROM e.data_plantao
+                )::INTEGER - 1
+            )
             + (v_isodow_destino - 1)
         )::DATE,
+
         dia_semana = p_dia_destino,
         turno = p_turno_destino
+
     WHERE e.id_residente = p_id_residente
       AND e.dia_semana = p_dia_origem
       AND e.turno = p_turno_origem;
 
-    GET DIAGNOSTICS v_total_alterado = ROW_COUNT;
+    GET DIAGNOSTICS
+        v_total_alterado = ROW_COUNT;
 
     RAISE NOTICE
         '% escala(s) reajustada(s) para % / %.',
