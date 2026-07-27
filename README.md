@@ -1,28 +1,28 @@
-# Sistema de Gestão Hospitalar Dra. Yuska — Etapa 1
+﻿# Sistema de GestÃ£o Hospitalar Dra. Yuska â€” Etapa 1
 
-Projeto acadêmico desenvolvido para a disciplina de Banco de Dados com o objetivo de modelar e implementar um sistema de gestão hospitalar utilizando PostgreSQL e SQL puro.
+Projeto acadÃªmico desenvolvido para a disciplina de Banco de Dados com o objetivo de modelar e implementar um sistema de gestÃ£o hospitalar utilizando PostgreSQL e SQL puro.
 
-A Etapa 1 contempla a modelagem conceitual, lógica e física do banco, a normalização até a Terceira Forma Normal, a implementação das tabelas e restrições de integridade, a carga de dados, as operações CRUD e as consultas analíticas solicitadas na especificação.
+A Etapa 1 contempla a modelagem conceitual, lÃ³gica e fÃ­sica do banco, a normalizaÃ§Ã£o atÃ© a Terceira Forma Normal, a implementaÃ§Ã£o das tabelas e restriÃ§Ãµes de integridade, a carga de dados, as operaÃ§Ãµes CRUD e as consultas analÃ­ticas solicitadas na especificaÃ§Ã£o.
 
-> Nesta etapa não foi utilizada ORM. A migração para SQLAlchemy e a implementação das funcionalidades avançadas pertencem à Etapa 2.
+> Nesta etapa nÃ£o foi utilizada ORM. A migraÃ§Ã£o para SQLAlchemy e a implementaÃ§Ã£o das funcionalidades avanÃ§adas pertencem Ã  Etapa 2.
 
 ---
 
 ## Objetivos da Etapa 1
 
-A implementação contempla:
+A implementaÃ§Ã£o contempla:
 
-- modelagem conceitual, lógica e física;
-- elaboração e documentação do DER;
-- normalização até a Terceira Forma Normal;
-- criação das tabelas e relacionamentos;
-- definição de chaves primárias e estrangeiras;
-- implementação de restrições `CHECK`, `NOT NULL` e `UNIQUE`;
-- inserção de dados para testes;
-- operações CRUD utilizando SQL puro;
-- consultas básicas e analíticas;
-- validações automáticas da estrutura e da carga;
-- testes funcionais utilizando transações e `ROLLBACK`.
+- modelagem conceitual, lÃ³gica e fÃ­sica;
+- elaboraÃ§Ã£o e documentaÃ§Ã£o do DER;
+- normalizaÃ§Ã£o atÃ© a Terceira Forma Normal;
+- criaÃ§Ã£o das tabelas e relacionamentos;
+- definiÃ§Ã£o de chaves primÃ¡rias e estrangeiras;
+- implementaÃ§Ã£o de restriÃ§Ãµes `CHECK`, `NOT NULL` e `UNIQUE`;
+- inserÃ§Ã£o de dados para testes;
+- operaÃ§Ãµes CRUD utilizando SQL puro;
+- consultas bÃ¡sicas e analÃ­ticas;
+- validaÃ§Ãµes automÃ¡ticas da estrutura e da carga;
+- testes funcionais utilizando transaÃ§Ãµes e `ROLLBACK`.
 
 ---
 
@@ -33,7 +33,7 @@ A implementação contempla:
 - Visual Studio Code;
 - Git;
 - GitHub;
-- Graphviz para geração e atualização do DER.
+- Graphviz para geraÃ§Ã£o e atualizaÃ§Ã£o do DER.
 
 ---
 
@@ -41,29 +41,29 @@ A implementação contempla:
 
 ```text
 sistema-gestao-hospitalar-bd/
-│
-├── diagrams/
-│   └── der.dot
-│
-├── docs/
-│   ├── DER_SGH_Dra_Yuska.pdf
-│   ├── MODELAGEM_E_NORMALIZACAO.md
-│   └── ROTEIRO_APRESENTACAO.md
-│
-├── sql/
-│   ├── 01_estrutura.sql
-│   ├── 02_dados_teste.sql
-│   ├── 03_crud_consultas.sql
-│   ├── 04_consultas_analiticas.sql
-│   ├── 05_all.sql
-│   ├── 06_validacoes.sql
-│   └── 07_testes_funcionais.sql
-│
-├── .gitignore
-└── README.md
+â”‚
+â”œâ”€â”€ diagrams/
+â”‚   â””â”€â”€ der.dot
+â”‚
+â”œâ”€â”€ docs/
+â”‚   â”œâ”€â”€ DER_SGH_Dra_Yuska.pdf
+â”‚   â”œâ”€â”€ MODELAGEM_E_NORMALIZACAO.md
+â”‚   â””â”€â”€ ROTEIRO_APRESENTACAO.md
+â”‚
+â”œâ”€â”€ sql/
+â”‚   â”œâ”€â”€ 01_estrutura.sql
+â”‚   â”œâ”€â”€ 02_dados_teste.sql
+â”‚   â”œâ”€â”€ 03_crud_consultas.sql
+â”‚   â”œâ”€â”€ 04_consultas_analiticas.sql
+â”‚   â”œâ”€â”€ 05_all.sql
+â”‚   â”œâ”€â”€ 06_validacoes.sql
+â”‚   â””â”€â”€ 07_testes_funcionais.sql
+â”‚
+â”œâ”€â”€ .gitignore
+â””â”€â”€ README.md
 ```
 
-Os scripts da pasta `sql/` são as fontes oficiais do código do banco de dados.
+Os scripts da pasta `sql/` sÃ£o as fontes oficiais do cÃ³digo do banco de dados.
 
 ---
 
@@ -73,22 +73,22 @@ O sistema utiliza a entidade `pessoa` como base para os dados comuns de paciente
 
 ```text
 Pessoa
-├── Paciente
-└── Profissional
-    ├── Residente
-    └── Preceptor
+â”œâ”€â”€ Paciente
+â””â”€â”€ Profissional
+    â”œâ”€â”€ Residente
+    â””â”€â”€ Preceptor
 ```
 
-As principais relações implementadas são:
+As principais relaÃ§Ãµes implementadas sÃ£o:
 
-- um paciente pode possuir vários atendimentos;
-- um residente pode realizar vários atendimentos;
-- um preceptor pode supervisionar vários atendimentos;
+- um paciente pode possuir vÃ¡rios atendimentos;
+- um residente pode realizar vÃ¡rios atendimentos;
+- um preceptor pode supervisionar vÃ¡rios atendimentos;
 - cada atendimento possui exatamente um paciente, um residente e um preceptor;
-- um atendimento pode possuir vários procedimentos;
-- um procedimento pode ser realizado em vários atendimentos;
+- um atendimento pode possuir vÃ¡rios procedimentos;
+- um procedimento pode ser realizado em vÃ¡rios atendimentos;
 - `procedimento_realizado` resolve o relacionamento muitos-para-muitos;
-- uma unidade pode possuir várias escalas de plantão;
+- uma unidade pode possuir vÃ¡rias escalas de plantÃ£o;
 - cada escala relaciona unidade, data, turno, residente e preceptor.
 
 ---
@@ -97,40 +97,40 @@ As principais relações implementadas são:
 
 | Arquivo            | Responsabilidade |
 
-| `01_estrutura.sql` | Recria as tabelas, chaves, relacionamentos e restrições |
-| `02_dados_teste.sql` | Insere a massa inicial utilizada nas demonstrações |
-| `03_crud_consultas.sql` | Contém operações CRUD e consultas básicas |
-| `04_consultas_analiticas.sql` | Contém as quatro consultas analíticas da especificação |
-| `05_all.sql` | Automatiza a preparação do banco pelo cliente `psql` |
-| `06_validacoes.sql` | Valida carga mínima, constraints e consistência dos dados |
-| `07_testes_funcionais.sql` | Demonstra operações com transações finalizadas por `ROLLBACK` |
+| `01_estrutura.sql` | Recria as tabelas, chaves, relacionamentos e restriÃ§Ãµes |
+| `02_dados_teste.sql` | Insere a massa inicial utilizada nas demonstraÃ§Ãµes |
+| `03_crud_consultas.sql` | ContÃ©m operaÃ§Ãµes CRUD e consultas bÃ¡sicas |
+| `04_consultas_analiticas.sql` | ContÃ©m as quatro consultas analÃ­ticas da especificaÃ§Ã£o |
+| `05_all.sql` | Automatiza a preparaÃ§Ã£o do banco pelo cliente `psql` |
+| `06_validacoes.sql` | Valida carga mÃ­nima, constraints e consistÃªncia dos dados |
+| `07_testes_funcionais.sql` | Demonstra operaÃ§Ãµes com transaÃ§Ãµes finalizadas por `ROLLBACK` |
 
 ---
 
-## Requisitos para execução
+## Requisitos para execuÃ§Ã£o
 
 ### PostgreSQL
 
-É necessário possuir o PostgreSQL 14 ou uma versão superior.
+Ã‰ necessÃ¡rio possuir o PostgreSQL 14 ou uma versÃ£o superior.
 
 Download:
 
 https://www.postgresql.org/download/
 
-Durante a instalação:
+Durante a instalaÃ§Ã£o:
 
 - instalar o servidor PostgreSQL;
 - instalar o pgAdmin 4;
-- definir uma senha para o usuário `postgres`.
+- definir uma senha para o usuÃ¡rio `postgres`.
 
 ### pgAdmin 4
 
 Utilizado para:
 
-- criação do banco;
-- execução dos scripts SQL;
-- inspeção das tabelas;
-- demonstração das consultas.
+- criaÃ§Ã£o do banco;
+- execuÃ§Ã£o dos scripts SQL;
+- inspeÃ§Ã£o das tabelas;
+- demonstraÃ§Ã£o das consultas.
 
 ### Git
 
@@ -141,8 +141,8 @@ https://git-scm.com/downloads
 Utilizado para:
 
 - versionamento do projeto;
-- colaboração entre os integrantes;
-- registro dos commits acadêmicos.
+- colaboraÃ§Ã£o entre os integrantes;
+- registro dos commits acadÃªmicos.
 
 ### Visual Studio Code
 
@@ -150,7 +150,7 @@ Download:
 
 https://code.visualstudio.com/
 
-Extensões recomendadas:
+ExtensÃµes recomendadas:
 
 - PostgreSQL;
 - SQLTools;
@@ -159,13 +159,13 @@ Extensões recomendadas:
 
 ### Graphviz
 
-Necessário somente para atualizar o DER a partir do arquivo `diagrams/der.dot`.
+NecessÃ¡rio somente para atualizar o DER a partir do arquivo `diagrams/etapa1/der.dot`.
 
 Download:
 
 https://graphviz.org/download/
 
-Verificação da instalação:
+VerificaÃ§Ã£o da instalaÃ§Ã£o:
 
 ```powershell
 dot -V
@@ -173,12 +173,12 @@ dot -V
 
 ---
 
-## Criação do banco
+## CriaÃ§Ã£o do banco
 
 No pgAdmin:
 
 1. conecte-se ao servidor PostgreSQL;
-2. clique com o botão direito em `Databases`;
+2. clique com o botÃ£o direito em `Databases`;
 3. selecione `Create` e depois `Database`;
 4. crie o banco com o nome:
 
@@ -191,41 +191,41 @@ hospital_yuska
 
 ---
 
-## Execução pelo pgAdmin
+## ExecuÃ§Ã£o pelo pgAdmin
 
-### Preparação do banco
+### PreparaÃ§Ã£o do banco
 
 Execute integralmente, nesta ordem:
 
 ```text
-1. sql/01_estrutura.sql
-2. sql/02_dados_teste.sql
-3. sql/06_validacoes.sql
+1. sql/etapa1/01_estrutura.sql
+2. sql/etapa1/02_dados_teste.sql
+3. sql/etapa1/06_validacoes.sql
 ```
 
-O arquivo `01_estrutura.sql` remove e recria as tabelas. Sua execução elimina os dados existentes, portanto o arquivo `02_dados_teste.sql` deve ser executado em seguida.
+O arquivo `01_estrutura.sql` remove e recria as tabelas. Sua execuÃ§Ã£o elimina os dados existentes, portanto o arquivo `02_dados_teste.sql` deve ser executado em seguida.
 
-### Demonstração das funcionalidades
+### DemonstraÃ§Ã£o das funcionalidades
 
-Depois da preparação:
+Depois da preparaÃ§Ã£o:
 
 ```text
-4. sql/03_crud_consultas.sql
-5. sql/04_consultas_analiticas.sql
-6. sql/07_testes_funcionais.sql
+4. sql/etapa1/03_crud_consultas.sql
+5. sql/etapa1/04_consultas_analiticas.sql
+6. sql/etapa1/07_testes_funcionais.sql
 ```
 
-Os arquivos `03` e `04` devem ser executados por blocos, selecionando cada consulta até o respectivo ponto e vírgula.
+Os arquivos `03` e `04` devem ser executados por blocos, selecionando cada consulta atÃ© o respectivo ponto e vÃ­rgula.
 
-O arquivo `03_crud_consultas.sql` contém comandos que alteram permanentemente os dados, como `INSERT`, `UPDATE` e `DELETE`.
+O arquivo `03_crud_consultas.sql` contÃ©m comandos que alteram permanentemente os dados, como `INSERT`, `UPDATE` e `DELETE`.
 
-Para uma demonstração repetível, recomenda-se utilizar o arquivo `07_testes_funcionais.sql`, pois suas alterações são executadas em transações finalizadas com `ROLLBACK`.
+Para uma demonstraÃ§Ã£o repetÃ­vel, recomenda-se utilizar o arquivo `07_testes_funcionais.sql`, pois suas alteraÃ§Ãµes sÃ£o executadas em transaÃ§Ãµes finalizadas com `ROLLBACK`.
 
 ---
 
-## Preparação automatizada com `psql`
+## PreparaÃ§Ã£o automatizada com `psql`
 
-O arquivo `sql/05_all.sql` executa automaticamente:
+O arquivo `sql/etapa1/05_all.sql` executa automaticamente:
 
 ```text
 01_estrutura.sql
@@ -233,21 +233,21 @@ O arquivo `sql/05_all.sql` executa automaticamente:
 06_validacoes.sql
 ```
 
-A partir da raiz do repositório, execute:
+A partir da raiz do repositÃ³rio, execute:
 
 ```powershell
-psql -U postgres -d hospital_yuska -f sql/05_all.sql
+psql -U postgres -d hospital_yuska -f sql/etapa1/05_all.sql
 ```
 
-> O arquivo `05_all.sql` utiliza comandos `\i`, que pertencem ao cliente `psql`. Esses comandos não devem ser executados diretamente no Query Tool do pgAdmin.
+> O arquivo `05_all.sql` utiliza comandos `\i`, que pertencem ao cliente `psql`. Esses comandos nÃ£o devem ser executados diretamente no Query Tool do pgAdmin.
 
-As operações CRUD e as consultas analíticas continuam sendo demonstradas separadamente pelos arquivos `03`, `04` e `07`.
+As operaÃ§Ãµes CRUD e as consultas analÃ­ticas continuam sendo demonstradas separadamente pelos arquivos `03`, `04` e `07`.
 
 ---
 
 ## Massa inicial de dados
 
-O projeto disponibiliza uma carga superior ao mínimo exigido na especificação:
+O projeto disponibiliza uma carga superior ao mÃ­nimo exigido na especificaÃ§Ã£o:
 
 | Entidade | Quantidade |
 |---|---:|
@@ -260,23 +260,23 @@ O projeto disponibiliza uma carga superior ao mínimo exigido na especificação
 | Procedimentos realizados | 12 |
 | Escalas | 8 |
 
-A ordem das inserções respeita as dependências entre as chaves estrangeiras:
+A ordem das inserÃ§Ãµes respeita as dependÃªncias entre as chaves estrangeiras:
 
 ```text
 pessoa
-→ paciente e profissional
-→ residente e preceptor
-→ unidade e procedimento
-→ atendimento
-→ procedimento_realizado
-→ escala
+â†’ paciente e profissional
+â†’ residente e preceptor
+â†’ unidade e procedimento
+â†’ atendimento
+â†’ procedimento_realizado
+â†’ escala
 ```
 
-As escalas são criadas dentro do mês corrente para garantir resultados na consulta mensal solicitada pela especificação.
+As escalas sÃ£o criadas dentro do mÃªs corrente para garantir resultados na consulta mensal solicitada pela especificaÃ§Ã£o.
 
 ---
 
-## Restrições de integridade
+## RestriÃ§Ãµes de integridade
 
 O banco utiliza:
 
@@ -285,77 +285,77 @@ O banco utiliza:
 - `NOT NULL`;
 - `UNIQUE`;
 - `CHECK`;
-- valores padrão com `DEFAULT`;
-- ações referenciais com `ON DELETE CASCADE`;
-- ações referenciais com `ON DELETE RESTRICT`.
+- valores padrÃ£o com `DEFAULT`;
+- aÃ§Ãµes referenciais com `ON DELETE CASCADE`;
+- aÃ§Ãµes referenciais com `ON DELETE RESTRICT`.
 
-Entre as regras implementadas estão:
+Entre as regras implementadas estÃ£o:
 
-- CPF composto por exatamente 11 dígitos;
-- CPF único por pessoa;
-- CRM único por profissional;
-- grupos sanguíneos limitados aos valores válidos;
-- ano de residência limitado a `R1`, `R2` ou `R3`;
+- CPF composto por exatamente 11 dÃ­gitos;
+- CPF Ãºnico por pessoa;
+- CRM Ãºnico por profissional;
+- grupos sanguÃ­neos limitados aos valores vÃ¡lidos;
+- ano de residÃªncia limitado a `R1`, `R2` ou `R3`;
 - tipos de unidade controlados;
-- capacidade de leitos não negativa;
-- duração dos atendimentos maior que zero;
+- capacidade de leitos nÃ£o negativa;
+- duraÃ§Ã£o dos atendimentos maior que zero;
 - quantidade e tempo dos procedimentos maiores que zero;
 - residente e preceptor distintos no atendimento;
-- turnos limitados a manhã, tarde ou noite;
-- coerência entre a data do plantão e o dia da semana;
-- prevenção de escalas duplicadas.
+- turnos limitados a manhÃ£, tarde ou noite;
+- coerÃªncia entre a data do plantÃ£o e o dia da semana;
+- prevenÃ§Ã£o de escalas duplicadas.
 
 ---
 
-## CRUD e consultas básicas
+## CRUD e consultas bÃ¡sicas
 
-As operações estão implementadas em:
+As operaÃ§Ãµes estÃ£o implementadas em:
 
 ```text
-sql/03_crud_consultas.sql
+sql/etapa1/03_crud_consultas.sql
 ```
 
-### Inserção validada de atendimento
+### InserÃ§Ã£o validada de atendimento
 
-Antes da inserção, o script verifica a existência de:
+Antes da inserÃ§Ã£o, o script verifica a existÃªncia de:
 
 - paciente;
 - residente;
 - preceptor.
 
-A operação utiliza CTEs e `EXISTS`. O atendimento somente é inserido quando todas as referências são válidas.
+A operaÃ§Ã£o utiliza CTEs e `EXISTS`. O atendimento somente Ã© inserido quando todas as referÃªncias sÃ£o vÃ¡lidas.
 
 ### Atendimentos de um paciente
 
 Lista:
 
 - identificador do atendimento;
-- data e horário;
-- duração;
+- data e horÃ¡rio;
+- duraÃ§Ã£o;
 - paciente;
 - residente;
 - preceptor.
 
-Os resultados são ordenados cronologicamente.
+Os resultados sÃ£o ordenados cronologicamente.
 
 ### Procedimentos de um atendimento
 
 Exibe:
 
-- código;
+- cÃ³digo;
 - nome do procedimento;
 - quantidade;
 - tempo real;
-- observação.
+- observaÃ§Ã£o.
 
-### Atualização de paciente
+### AtualizaÃ§Ã£o de paciente
 
 Permite modificar:
 
-- endereço;
-- número do convênio.
+- endereÃ§o;
+- nÃºmero do convÃªnio.
 
-### Remoção condicionada
+### RemoÃ§Ã£o condicionada
 
 Um procedimento realizado somente pode ser removido quando:
 
@@ -363,14 +363,14 @@ Um procedimento realizado somente pode ser removido quando:
 faturado = FALSE
 ```
 
-### Média de duração por residente
+### MÃ©dia de duraÃ§Ã£o por residente
 
 Calcula:
 
-- duração média dos atendimentos;
+- duraÃ§Ã£o mÃ©dia dos atendimentos;
 - total de atendimentos por residente.
 
-São utilizadas as funções:
+SÃ£o utilizadas as funÃ§Ãµes:
 
 ```sql
 AVG()
@@ -381,17 +381,17 @@ GROUP BY
 
 ---
 
-## Consultas analíticas
+## Consultas analÃ­ticas
 
-As consultas estão implementadas em:
+As consultas estÃ£o implementadas em:
 
 ```text
-sql/04_consultas_analiticas.sql
+sql/etapa1/04_consultas_analiticas.sql
 ```
 
 ### Ranking dos residentes
 
-Classifica os residentes pelo número de atendimentos realizados.
+Classifica os residentes pelo nÃºmero de atendimentos realizados.
 
 Utiliza:
 
@@ -400,9 +400,9 @@ COUNT()
 DENSE_RANK()
 ```
 
-### Preceptores com mais de cinco supervisões
+### Preceptores com mais de cinco supervisÃµes
 
-Identifica preceptores que supervisionaram mais de cinco atendimentos no período definido.
+Identifica preceptores que supervisionaram mais de cinco atendimentos no perÃ­odo definido.
 
 Utiliza:
 
@@ -411,9 +411,9 @@ GROUP BY
 HAVING
 ```
 
-### Plantões por residente e unidade
+### PlantÃµes por residente e unidade
 
-Calcula a quantidade de plantões no mês corrente, agrupando os dados por unidade e residente.
+Calcula a quantidade de plantÃµes no mÃªs corrente, agrupando os dados por unidade e residente.
 
 Utiliza:
 
@@ -438,50 +438,50 @@ NOT EXISTS
 
 ## Testes funcionais
 
-Os testes estão implementados em:
+Os testes estÃ£o implementados em:
 
 ```text
-sql/07_testes_funcionais.sql
+sql/etapa1/07_testes_funcionais.sql
 ```
 
-Características:
+CaracterÃ­sticas:
 
-- utilização de `BEGIN`;
-- execução de operações de inserção, atualização e remoção;
-- conferência dos resultados;
-- finalização com `ROLLBACK`;
-- preservação da massa inicial;
+- utilizaÃ§Ã£o de `BEGIN`;
+- execuÃ§Ã£o de operaÃ§Ãµes de inserÃ§Ã£o, atualizaÃ§Ã£o e remoÃ§Ã£o;
+- conferÃªncia dos resultados;
+- finalizaÃ§Ã£o com `ROLLBACK`;
+- preservaÃ§Ã£o da massa inicial;
 - possibilidade de repetir os testes.
 
 ---
 
-## Validação da Etapa 1
+## ValidaÃ§Ã£o da Etapa 1
 
 O arquivo:
 
 ```text
-sql/06_validacoes.sql
+sql/etapa1/06_validacoes.sql
 ```
 
 verifica:
 
-- quantidade mínima de pacientes;
-- quantidade mínima de residentes;
-- quantidade mínima de preceptores;
-- quantidade mínima de unidades;
-- quantidade mínima de atendimentos;
-- quantidade mínima de procedimentos realizados;
+- quantidade mÃ­nima de pacientes;
+- quantidade mÃ­nima de residentes;
+- quantidade mÃ­nima de preceptores;
+- quantidade mÃ­nima de unidades;
+- quantidade mÃ­nima de atendimentos;
+- quantidade mÃ­nima de procedimentos realizados;
 - constraints existentes no schema;
-- sobreposição indevida entre residente e preceptor;
+- sobreposiÃ§Ã£o indevida entre residente e preceptor;
 - duplicidades de escala.
 
-Na validação da carga, o resultado esperado é:
+Na validaÃ§Ã£o da carga, o resultado esperado Ã©:
 
 ```text
 OK
 ```
 
-Nas consultas de inconsistência, o resultado esperado é:
+Nas consultas de inconsistÃªncia, o resultado esperado Ã©:
 
 ```text
 0 linhas
@@ -489,54 +489,54 @@ Nas consultas de inconsistência, o resultado esperado é:
 
 ---
 
-## Documentação da modelagem
+## DocumentaÃ§Ã£o da modelagem
 
 ### DER
 
-Versão em PDF:
+VersÃ£o em PDF:
 
 ```text
-docs/DER_SGH_Dra_Yuska.pdf
+docs/etapa1/DER_SGH_Dra_Yuska.pdf
 ```
 
-Fonte editável:
+Fonte editÃ¡vel:
 
 ```text
-diagrams/der.dot
+diagrams/etapa1/der.dot
 ```
 
 Para gerar novamente o PDF:
 
 ```powershell
-dot -Tpdf diagrams\der.dot -o docs\DER_SGH_Dra_Yuska.pdf
+dot -Tpdf diagrams\etapa1\der.dot -o docs\etapa1\DER_SGH_Dra_Yuska.pdf
 ```
 
-### Modelo relacional e normalização
+### Modelo relacional e normalizaÃ§Ã£o
 
-Disponível em:
+DisponÃ­vel em:
 
 ```text
-docs/MODELAGEM_E_NORMALIZACAO.md
+docs/etapa1/MODELAGEM_E_NORMALIZACAO.md
 ```
 
 O documento apresenta:
 
 - justificativas das cardinalidades;
-- especializações de pessoa e profissional;
-- transformação do DER para o modelo relacional;
-- análise das dependências funcionais;
-- justificativa da normalização até a Terceira Forma Normal;
-- decisões adotadas para cumprir a especificação.
+- especializaÃ§Ãµes de pessoa e profissional;
+- transformaÃ§Ã£o do DER para o modelo relacional;
+- anÃ¡lise das dependÃªncias funcionais;
+- justificativa da normalizaÃ§Ã£o atÃ© a Terceira Forma Normal;
+- decisÃµes adotadas para cumprir a especificaÃ§Ã£o.
 
-### Roteiro de apresentação
+### Roteiro de apresentaÃ§Ã£o
 
-Disponível em:
+DisponÃ­vel em:
 
 ```text
 docs/ROTEIRO_APRESENTACAO.md
 ```
 
-Contém a sequência utilizada para demonstrar a modelagem, a implementação, as validações, o CRUD e as consultas analíticas.
+ContÃ©m a sequÃªncia utilizada para demonstrar a modelagem, a implementaÃ§Ã£o, as validaÃ§Ãµes, o CRUD e as consultas analÃ­ticas.
 
 ---
 
@@ -546,46 +546,46 @@ Alguns requisitos exigiram atributos complementares ao modelo relacional inicial
 
 | Campo | Justificativa |
 |---|---|
-| `paciente.endereco` | Permitir a atualização do endereço |
+| `paciente.endereco` | Permitir a atualizaÃ§Ã£o do endereÃ§o |
 | `procedimento.nivel_risco` | Identificar procedimentos de risco `ALTO` |
-| `procedimento_realizado.faturado` | Controlar a remoção de procedimentos faturados |
-| `escala.data_plantao` | Permitir consultas referentes ao mês corrente |
+| `procedimento_realizado.faturado` | Controlar a remoÃ§Ã£o de procedimentos faturados |
+| `escala.data_plantao` | Permitir consultas referentes ao mÃªs corrente |
 
-Esses campos mantêm coerência com o contexto do sistema e viabilizam as operações exigidas.
+Esses campos mantÃªm coerÃªncia com o contexto do sistema e viabilizam as operaÃ§Ãµes exigidas.
 
 ---
 
-## Restauração do ambiente
+## RestauraÃ§Ã£o do ambiente
 
 Para retornar o banco ao estado inicial:
 
 ```text
-1. executar sql/01_estrutura.sql;
-2. executar sql/02_dados_teste.sql;
-3. executar sql/06_validacoes.sql.
+1. executar sql/etapa1/01_estrutura.sql;
+2. executar sql/etapa1/02_dados_teste.sql;
+3. executar sql/etapa1/06_validacoes.sql.
 ```
 
-Também é possível utilizar:
+TambÃ©m Ã© possÃ­vel utilizar:
 
 ```powershell
-psql -U postgres -d hospital_yuska -f sql/05_all.sql
+psql -U postgres -d hospital_yuska -f sql/etapa1/05_all.sql
 ```
 
 ---
 
-## Situação da Etapa 1
+## SituaÃ§Ã£o da Etapa 1
 
-A Etapa 1 encontra-se concluída, contemplando:
+A Etapa 1 encontra-se concluÃ­da, contemplando:
 
 - modelagem;
-- normalização;
-- implementação física;
+- normalizaÃ§Ã£o;
+- implementaÃ§Ã£o fÃ­sica;
 - carga de dados;
-- operações CRUD;
-- consultas básicas;
-- consultas analíticas;
-- validações;
+- operaÃ§Ãµes CRUD;
+- consultas bÃ¡sicas;
+- consultas analÃ­ticas;
+- validaÃ§Ãµes;
 - testes funcionais;
-- documentação técnica.
+- documentaÃ§Ã£o tÃ©cnica.
 
-As funcionalidades avançadas, incluindo procedures, triggers, views, ORM e tratamento de concorrência, serão implementadas separadamente na Etapa 2.
+As funcionalidades avanÃ§adas, incluindo procedures, triggers, views, ORM e tratamento de concorrÃªncia, serÃ£o implementadas separadamente na Etapa 2.
