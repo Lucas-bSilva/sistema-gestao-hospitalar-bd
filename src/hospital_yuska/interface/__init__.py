@@ -1,0 +1,1 @@
+"""Camada de apresentação gráfica do Sistema de Gestão Hospitalar."""
