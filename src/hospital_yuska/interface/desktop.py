@@ -15,23 +15,32 @@ class OperacaoCancelada(Exception):
 
 
 class AplicacaoHospital(ctk.CTk):
+    """Interface desktop para demonstração das funcionalidades da Etapa 2."""
+
+    COR_FUNDO = "#08111F"
+    COR_CABECALHO = "#0F1B2D"
+    COR_SUPERFICIE = "#111D31"
+    COR_CARTAO = "#15243A"
+    COR_CARTAO_ALTERNADO = "#101B2D"
+    COR_BORDA = "#2A3B55"
+    COR_PRIMARIA = "#2563EB"
+    COR_PRIMARIA_HOVER = "#1D4ED8"
+    COR_DESTAQUE = "#0EA5E9"
+    COR_TEXTO = "#F8FAFC"
+    COR_TEXTO_SECUNDARIO = "#A8B4C7"
+    COR_SUCESSO = "#34D399"
+    COR_ERRO = "#F87171"
+
     def __init__(self) -> None:
         super().__init__()
 
-        self.title(
-            "Sistema de Gestão Hospitalar Dra. Yuska"
-        )
-        self.geometry("1280x780")
-        self.minsize(1050, 680)
+        self.title("Sistema de Gestão Hospitalar Dra. Yuska")
+        self.geometry("1360x820")
+        self.minsize(1120, 700)
+        self.configure(fg_color=self.COR_FUNDO)
 
-        self.grid_columnconfigure(
-            0,
-            weight=1,
-        )
-        self.grid_rowconfigure(
-            2,
-            weight=1,
-        )
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(2, weight=1)
 
         self._configurar_estilo()
         self._criar_cabecalho()
@@ -40,64 +49,83 @@ class AplicacaoHospital(ctk.CTk):
         self._criar_status()
 
     def _configurar_estilo(self) -> None:
+        """Configura a identidade visual da tabela e das barras de rolagem."""
         estilo = ttk.Style(self)
-
         estilo.theme_use("clam")
 
         estilo.configure(
             "Treeview",
-            background="#111827",
-            fieldbackground="#111827",
-            foreground="#f9fafb",
-            rowheight=30,
+            background=self.COR_CARTAO_ALTERNADO,
+            fieldbackground=self.COR_CARTAO_ALTERNADO,
+            foreground=self.COR_TEXTO,
+            rowheight=42,
             borderwidth=0,
+            relief="flat",
+            font=("Segoe UI", 13),
         )
 
         estilo.configure(
             "Treeview.Heading",
-            background="#1f2937",
-            foreground="#f9fafb",
+            background="#20314B",
+            foreground=self.COR_TEXTO,
             relief="flat",
-            font=("Segoe UI", 10, "bold"),
+            borderwidth=0,
+            padding=(12, 11),
+            font=("Segoe UI", 13, "bold"),
         )
 
         estilo.map(
             "Treeview",
-            background=[
-                ("selected", "#2563eb")
-            ],
+            background=[("selected", self.COR_PRIMARIA)],
+            foreground=[("selected", "#FFFFFF")],
+        )
+
+        estilo.map(
+            "Treeview.Heading",
+            background=[("active", "#2B4262")],
+        )
+
+        estilo.configure(
+            "Vertical.TScrollbar",
+            background="#31445F",
+            troughcolor=self.COR_SUPERFICIE,
+            bordercolor=self.COR_SUPERFICIE,
+            arrowcolor=self.COR_TEXTO,
+        )
+
+        estilo.configure(
+            "Horizontal.TScrollbar",
+            background="#31445F",
+            troughcolor=self.COR_SUPERFICIE,
+            bordercolor=self.COR_SUPERFICIE,
+            arrowcolor=self.COR_TEXTO,
         )
 
     def _criar_cabecalho(self) -> None:
+        """Cria o cabeçalho principal da aplicação."""
         cabecalho = ctk.CTkFrame(
             self,
             corner_radius=0,
+            fg_color=self.COR_CABECALHO,
+            border_width=0,
         )
-        cabecalho.grid(
-            row=0,
-            column=0,
-            sticky="ew",
-        )
-        cabecalho.grid_columnconfigure(
-            0,
-            weight=1,
-        )
+        cabecalho.grid(row=0, column=0, sticky="ew")
+        cabecalho.grid_columnconfigure(0, weight=1)
 
         ctk.CTkLabel(
             cabecalho,
-            text=(
-                "Sistema de Gestão Hospitalar "
-                "Dra. Yuska"
-            ),
+            text="Sistema de Gestão Hospitalar Dra. Yuska",
+            text_color=self.COR_TEXTO,
             font=ctk.CTkFont(
-                size=24,
+                family="Segoe UI",
+                size=27,
                 weight="bold",
             ),
         ).grid(
             row=0,
             column=0,
-            padx=24,
-            pady=(18, 2),
+            padx=28,
+            pady=(20, 3),
             sticky="w",
         )
 
@@ -107,25 +135,51 @@ class AplicacaoHospital(ctk.CTk):
                 "Etapa 2 — PostgreSQL, SQLAlchemy "
                 "e funcionalidades avançadas"
             ),
-            text_color="#9ca3af",
+            text_color=self.COR_TEXTO_SECUNDARIO,
+            font=ctk.CTkFont(
+                family="Segoe UI",
+                size=14,
+            ),
         ).grid(
             row=1,
             column=0,
-            padx=24,
-            pady=(0, 16),
+            padx=28,
+            pady=(0, 18),
             sticky="w",
         )
 
+        ctk.CTkFrame(
+            cabecalho,
+            height=3,
+            corner_radius=0,
+            fg_color=self.COR_DESTAQUE,
+        ).grid(
+            row=2,
+            column=0,
+            sticky="ew",
+        )
+
     def _criar_abas(self) -> None:
+        """Organiza as funcionalidades em grupos de navegação."""
         self.abas = ctk.CTkTabview(
             self,
-            height=230,
+            height=240,
+            corner_radius=12,
+            fg_color=self.COR_SUPERFICIE,
+            border_width=1,
+            border_color=self.COR_BORDA,
+            segmented_button_fg_color="#1B2B43",
+            segmented_button_selected_color=self.COR_PRIMARIA,
+            segmented_button_selected_hover_color=self.COR_PRIMARIA_HOVER,
+            segmented_button_unselected_color="#1B2B43",
+            segmented_button_unselected_hover_color="#2A3B55",
+            text_color=self.COR_TEXTO,
         )
         self.abas.grid(
             row=1,
             column=0,
-            padx=20,
-            pady=(15, 10),
+            padx=22,
+            pady=(16, 12),
             sticky="ew",
         )
 
@@ -138,12 +192,10 @@ class AplicacaoHospital(ctk.CTk):
 
         for nome in nomes:
             aba = self.abas.add(nome)
+            aba.configure(fg_color=self.COR_SUPERFICIE)
 
             for coluna in range(4):
-                aba.grid_columnconfigure(
-                    coluna,
-                    weight=1,
-                )
+                aba.grid_columnconfigure(coluna, weight=1)
 
         self._botoes_visao_geral()
         self._botoes_etapa1()
@@ -158,16 +210,28 @@ class AplicacaoHospital(ctk.CTk):
         linha: int,
         coluna: int,
     ) -> None:
+        """Adiciona um botão padronizado à aba informada."""
         ctk.CTkButton(
             self.abas.tab(aba),
             text=texto,
             command=comando,
-            height=42,
+            height=46,
+            corner_radius=9,
+            border_width=1,
+            border_color="#3B82F6",
+            fg_color=self.COR_PRIMARIA,
+            hover_color=self.COR_PRIMARIA_HOVER,
+            text_color="#FFFFFF",
+            font=ctk.CTkFont(
+                family="Segoe UI",
+                size=13,
+                weight="bold",
+            ),
         ).grid(
             row=linha,
             column=coluna,
-            padx=8,
-            pady=8,
+            padx=9,
+            pady=9,
             sticky="ew",
         )
 
@@ -272,9 +336,7 @@ class AplicacaoHospital(ctk.CTk):
             ),
         )
 
-        for indice, (texto, comando) in enumerate(
-            botoes
-        ):
+        for indice, (texto, comando) in enumerate(botoes):
             self._adicionar_botao(
                 "ORM — Etapa 1",
                 texto,
@@ -312,9 +374,7 @@ class AplicacaoHospital(ctk.CTk):
             ),
         )
 
-        for indice, (texto, comando) in enumerate(
-            botoes
-        ):
+        for indice, (texto, comando) in enumerate(botoes):
             self._adicionar_botao(
                 "ORM — Avançadas",
                 texto,
@@ -360,9 +420,7 @@ class AplicacaoHospital(ctk.CTk):
             ),
         )
 
-        for indice, (texto, comando) in enumerate(
-            botoes
-        ):
+        for indice, (texto, comando) in enumerate(botoes):
             self._adicionar_botao(
                 "Procedures e views",
                 texto,
@@ -372,69 +430,79 @@ class AplicacaoHospital(ctk.CTk):
             )
 
     def _criar_resultados(self) -> None:
-        quadro = ctk.CTkFrame(self)
+        """Cria o painel responsável por exibir os resultados das consultas."""
+        quadro = ctk.CTkFrame(
+            self,
+            corner_radius=12,
+            fg_color=self.COR_SUPERFICIE,
+            border_width=1,
+            border_color=self.COR_BORDA,
+        )
         quadro.grid(
             row=2,
             column=0,
-            padx=20,
-            pady=(0, 10),
+            padx=22,
+            pady=(0, 12),
             sticky="nsew",
         )
 
-        quadro.grid_rowconfigure(
-            1,
-            weight=1,
-        )
-        quadro.grid_columnconfigure(
-            0,
-            weight=1,
-        )
+        quadro.grid_rowconfigure(1, weight=1)
+        quadro.grid_columnconfigure(0, weight=1)
 
         self.titulo_resultado = ctk.CTkLabel(
             quadro,
             text="Resultados",
+            text_color=self.COR_TEXTO,
             font=ctk.CTkFont(
-                size=17,
+                family="Segoe UI",
+                size=19,
                 weight="bold",
             ),
         )
         self.titulo_resultado.grid(
             row=0,
             column=0,
-            padx=15,
-            pady=12,
+            padx=18,
+            pady=(14, 10),
             sticky="w",
         )
 
         moldura_tabela = ctk.CTkFrame(
             quadro,
-            fg_color="transparent",
+            fg_color=self.COR_CARTAO_ALTERNADO,
+            corner_radius=8,
+            border_width=1,
+            border_color=self.COR_BORDA,
         )
         moldura_tabela.grid(
             row=1,
             column=0,
-            padx=12,
-            pady=(0, 12),
+            padx=14,
+            pady=(0, 14),
             sticky="nsew",
         )
 
-        moldura_tabela.grid_rowconfigure(
-            0,
-            weight=1,
-        )
-        moldura_tabela.grid_columnconfigure(
-            0,
-            weight=1,
-        )
+        moldura_tabela.grid_rowconfigure(0, weight=1)
+        moldura_tabela.grid_columnconfigure(0, weight=1)
 
         self.tabela = ttk.Treeview(
             moldura_tabela,
             show="headings",
+            selectmode="browse",
         )
         self.tabela.grid(
             row=0,
             column=0,
             sticky="nsew",
+        )
+
+        self.tabela.tag_configure(
+            "linha_par",
+            background=self.COR_CARTAO_ALTERNADO,
+        )
+        self.tabela.tag_configure(
+            "linha_impar",
+            background=self.COR_CARTAO,
         )
 
         barra_vertical = ttk.Scrollbar(
@@ -460,24 +528,27 @@ class AplicacaoHospital(ctk.CTk):
         )
 
         self.tabela.configure(
-            yscrollcommand=
-                barra_vertical.set,
-            xscrollcommand=
-                barra_horizontal.set,
+            yscrollcommand=barra_vertical.set,
+            xscrollcommand=barra_horizontal.set,
         )
 
     def _criar_status(self) -> None:
+        """Cria a área inferior de mensagens da aplicação."""
         self.status = ctk.CTkLabel(
             self,
             text="Aplicação pronta.",
             anchor="w",
-            text_color="#9ca3af",
+            text_color=self.COR_TEXTO_SECUNDARIO,
+            font=ctk.CTkFont(
+                family="Segoe UI",
+                size=13,
+            ),
         )
         self.status.grid(
             row=3,
             column=0,
-            padx=24,
-            pady=(0, 10),
+            padx=26,
+            pady=(0, 12),
             sticky="ew",
         )
 
@@ -524,7 +595,8 @@ class AplicacaoHospital(ctk.CTk):
     ) -> None:
         try:
             self.status.configure(
-                text=f"Executando: {titulo}..."
+                text=f"Executando: {titulo}...",
+                text_color=self.COR_DESTAQUE,
             )
 
             registros = operacao()
@@ -536,12 +608,14 @@ class AplicacaoHospital(ctk.CTk):
 
         except OperacaoCancelada:
             self.status.configure(
-                text="Operação cancelada."
+                text="Operação cancelada.",
+                text_color=self.COR_TEXTO_SECUNDARIO,
             )
 
         except Exception as erro:
             self.status.configure(
-                text="A operação não foi concluída."
+                text="A operação não foi concluída.",
+                text_color=self.COR_ERRO,
             )
 
             messagebox.showerror(
@@ -555,77 +629,125 @@ class AplicacaoHospital(ctk.CTk):
         titulo: str,
         registros: list[dict],
     ) -> None:
-        self.titulo_resultado.configure(
-            text=titulo
-        )
+        self.titulo_resultado.configure(text=titulo)
 
         for item in self.tabela.get_children():
             self.tabela.delete(item)
 
         if not registros:
-            self.tabela["columns"] = (
-                "resultado",
-            )
+            self.tabela["columns"] = ("resultado",)
             self.tabela.heading(
                 "resultado",
                 text="Resultado",
+                anchor="center",
             )
             self.tabela.column(
                 "resultado",
                 width=700,
+                minwidth=300,
                 anchor="w",
             )
             self.tabela.insert(
                 "",
                 "end",
-                values=(
-                    "Nenhum registro encontrado.",
-                ),
+                values=("Nenhum registro encontrado.",),
+                tags=("linha_par",),
             )
 
             self.status.configure(
-                text="Consulta concluída sem registros."
+                text="Consulta concluída sem registros.",
+                text_color=self.COR_TEXTO_SECUNDARIO,
             )
             return
 
-        colunas = list(
-            registros[0].keys()
-        )
+        colunas = list(registros[0].keys())
+        linhas_formatadas = [
+            [
+                self._formatar(registro.get(coluna))
+                for coluna in colunas
+            ]
+            for registro in registros
+        ]
 
         self.tabela["columns"] = colunas
 
-        for coluna in colunas:
+        for indice_coluna, coluna in enumerate(colunas):
+            titulo_coluna = coluna.replace("_", " ").title()
+            valores_coluna = [
+                linha[indice_coluna]
+                for linha in linhas_formatadas[:100]
+            ]
+
             self.tabela.heading(
                 coluna,
-                text=coluna.replace(
-                    "_",
-                    " ",
-                ).title(),
+                text=titulo_coluna,
+                anchor="center",
             )
             self.tabela.column(
                 coluna,
-                width=170,
-                minwidth=100,
-                anchor="w",
+                width=self._calcular_largura_coluna(
+                    titulo_coluna,
+                    valores_coluna,
+                ),
+                minwidth=110,
+                anchor=self._definir_ancora_coluna(coluna),
+                stretch=True,
             )
 
-        for registro in registros:
+        for indice_linha, valores in enumerate(linhas_formatadas):
+            etiqueta = (
+                "linha_par"
+                if indice_linha % 2 == 0
+                else "linha_impar"
+            )
             self.tabela.insert(
                 "",
                 "end",
-                values=[
-                    self._formatar(
-                        registro.get(coluna)
-                    )
-                    for coluna in colunas
-                ],
+                values=valores,
+                tags=(etiqueta,),
             )
 
         self.status.configure(
             text=(
                 f"Consulta concluída: "
                 f"{len(registros)} registro(s)."
-            )
+            ),
+            text_color=self.COR_SUCESSO,
+        )
+
+    @staticmethod
+    def _calcular_largura_coluna(
+        titulo: str,
+        valores: list[str],
+    ) -> int:
+        """Calcula uma largura legível sem deixar a tabela excessivamente larga."""
+        maior_conteudo = max(
+            [len(titulo), *(len(valor) for valor in valores)],
+            default=len(titulo),
+        )
+        return min(max(150, maior_conteudo * 10 + 46), 420)
+
+    @staticmethod
+    def _definir_ancora_coluna(coluna: str) -> str:
+        """Centraliza identificadores e indicadores numéricos na tabela."""
+        nome = coluna.lower()
+        prefixos_centralizados = (
+            "id_",
+            "total",
+            "quantidade",
+            "media",
+            "média",
+            "percentual",
+            "duracao",
+            "duração",
+            "status",
+            "supervisao",
+            "supervisão",
+        )
+        return (
+            "center"
+            if nome.startswith(prefixos_centralizados)
+            else "w"
         )
 
     @staticmethod
@@ -634,16 +756,10 @@ class AplicacaoHospital(ctk.CTk):
             return ""
 
         if isinstance(valor, datetime):
-            return valor.strftime(
-                "%d/%m/%Y %H:%M"
-            )
+            return valor.strftime("%d/%m/%Y %H:%M")
 
         if isinstance(valor, bool):
-            return (
-                "Sim"
-                if valor
-                else "Não"
-            )
+            return "Sim" if valor else "Não"
 
         return str(valor)
 
@@ -772,9 +888,7 @@ class AplicacaoHospital(ctk.CTk):
     ) -> None:
         self._executar(
             nome_view,
-            lambda: servicos.consultar_view(
-                nome_view
-            ),
+            lambda: servicos.consultar_view(nome_view),
         )
 
     def _registrar_atendimento_completo(
@@ -798,37 +912,29 @@ class AplicacaoHospital(ctk.CTk):
                 ),
             )
 
-            return (
-                servicos.registrar_atendimento_completo(
-                    data_hora=data_hora,
-                    duracao_minutos=
-                        self._pedir_inteiro(
-                            "Procedure",
-                            "Duração em minutos:",
-                        ),
-                    id_paciente=
-                        self._pedir_inteiro(
-                            "Procedure",
-                            "ID do paciente:",
-                        ),
-                    id_residente=
-                        self._pedir_inteiro(
-                            "Procedure",
-                            "ID do residente:",
-                        ),
-                    id_preceptor=
-                        self._pedir_inteiro(
-                            "Procedure",
-                            "ID do preceptor:",
-                        ),
-                    id_unidade=
-                        self._pedir_inteiro(
-                            "Procedure",
-                            "ID da unidade:",
-                        ),
-                    procedimentos_json=
-                        procedimentos,
-                )
+            return servicos.registrar_atendimento_completo(
+                data_hora=data_hora,
+                duracao_minutos=self._pedir_inteiro(
+                    "Procedure",
+                    "Duração em minutos:",
+                ),
+                id_paciente=self._pedir_inteiro(
+                    "Procedure",
+                    "ID do paciente:",
+                ),
+                id_residente=self._pedir_inteiro(
+                    "Procedure",
+                    "ID do residente:",
+                ),
+                id_preceptor=self._pedir_inteiro(
+                    "Procedure",
+                    "ID do preceptor:",
+                ),
+                id_unidade=self._pedir_inteiro(
+                    "Procedure",
+                    "ID da unidade:",
+                ),
+                procedimentos_json=procedimentos,
             )
 
         self._executar(
@@ -868,7 +974,8 @@ class AplicacaoHospital(ctk.CTk):
 
     def _iniciar_concorrencia(self) -> None:
         self.status.configure(
-            text="Executando simulação de concorrência..."
+            text="Executando simulação de concorrência...",
+            text_color=self.COR_DESTAQUE,
         )
 
         thread = threading.Thread(
@@ -879,9 +986,7 @@ class AplicacaoHospital(ctk.CTk):
 
     def _executar_concorrencia(self) -> None:
         try:
-            registros = (
-                servicos.simular_concorrencia()
-            )
+            registros = servicos.simular_concorrencia()
 
             self.after(
                 0,
