@@ -1,6 +1,6 @@
-2026-08-01 11:38:21,017 | Transação A | Iniciando transação.
-2026-08-01 11:38:21,070 | Transação A | Residente bloqueado e escala preparada.
-2026-08-01 11:38:21,071 | Transação B | Iniciando transação.
-2026-08-01 11:38:24,072 | Transação A | COMMIT concluído.
-2026-08-01 11:38:24,081 | Transação B | Transação rejeitada: O residente já possui escala nessa data e turno.
-2026-08-01 11:38:24,090 | MainThread | Total final de escalas conflitantes: 1
+2026-08-02 10:32:16,671 | Transação A | Iniciando transação.
+2026-08-02 10:32:16,747 | Transação A | Residente bloqueado e escala preparada.
+2026-08-02 10:32:16,748 | Transação B | Iniciando transação.
+2026-08-02 10:32:19,750 | Transação A | COMMIT concluído.
+2026-08-02 10:32:19,755 | Transação B | Transação rejeitada: O residente já possui escala nessa data e turno.
+2026-08-02 10:32:19,762 | MainThread | Total final de escalas conflitantes: 1
