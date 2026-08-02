@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import json
 import subprocess
 import sys
@@ -714,18 +715,28 @@ def listar_medias_procedimentos() -> list[Registro]:
 
 
 def simular_concorrencia() -> list[Registro]:
+    """Executa a simulação de concorrência e retorna sua saída em UTF-8."""
+
     raiz = Path(__file__).resolve().parents[3]
+    arquivo_simulacao = raiz / "scripts" / "simular_concorrencia.py"
+
+    ambiente = os.environ.copy()
+
+    # Padroniza a codificação do processo filho no Windows.
+    ambiente["PYTHONUTF8"] = "1"
+    ambiente["PYTHONIOENCODING"] = "utf-8"
 
     processo = subprocess.run(
         [
             sys.executable,
-            "scripts/simular_concorrencia.py",
+            str(arquivo_simulacao),
         ],
         cwd=raiz,
         capture_output=True,
         text=True,
         encoding="utf-8",
-        errors="replace",
+        errors="strict",
+        env=ambiente,
         check=False,
     )
 
@@ -740,11 +751,12 @@ def simular_concorrencia() -> list[Registro]:
 
     if processo.returncode != 0:
         raise RuntimeError(
-            saida or
-            "A simulação terminou com erro."
+            saida
+            or "A simulação de concorrência terminou com erro."
         )
 
     return [
         {"linha": linha}
         for linha in saida.splitlines()
+        if linha.strip()
     ]
