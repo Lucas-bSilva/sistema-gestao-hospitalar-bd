@@ -1,16 +1,23 @@
 from __future__ import annotations
 
-import os
 import json
+import os
 import subprocess
 import sys
 from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
-from sqlalchemy import inspect, text
+from sqlalchemy import inspect, select, text
 
 from hospital_yuska.banco import sessao_transacional
+from hospital_yuska.modelos import (
+    Paciente,
+    Pessoa,
+    Preceptor,
+    Residente,
+    Unidade,
+)
 from hospital_yuska.consultas.avancadas import (
     listar_preceptores_de_pacientes_flamenguistas,
     obter_atendimento_eager,
@@ -33,6 +40,7 @@ from hospital_yuska.repositorios.operacoes_etapa1 import (
 
 
 Registro = dict[str, Any]
+OpcaoSelecao = tuple[int, str]
 
 
 def _converter_linhas(linhas: Any) -> list[Registro]:
@@ -55,6 +63,102 @@ def _limites_mes_atual() -> tuple[date, date]:
         )
 
     return inicio, fim
+
+
+def listar_pacientes_para_selecao() -> list[OpcaoSelecao]:
+    """Lista pacientes ativos para os campos pesquisáveis da interface."""
+    with sessao_transacional() as sessao:
+        comando = (
+            select(
+                Paciente.id_pessoa,
+                Pessoa.nome,
+            )
+            .join(
+                Pessoa,
+                Pessoa.id_pessoa == Paciente.id_pessoa,
+            )
+            .order_by(
+                Pessoa.nome,
+                Paciente.id_pessoa,
+            )
+        )
+
+        return [
+            (identificador, nome)
+            for identificador, nome
+            in sessao.execute(comando).all()
+        ]
+
+
+def listar_residentes_para_selecao() -> list[OpcaoSelecao]:
+    """Lista residentes para seleção sem exigir memorização dos IDs."""
+    with sessao_transacional() as sessao:
+        comando = (
+            select(
+                Residente.id_profissional,
+                Pessoa.nome,
+            )
+            .join(
+                Pessoa,
+                Pessoa.id_pessoa == Residente.id_profissional,
+            )
+            .order_by(
+                Pessoa.nome,
+                Residente.id_profissional,
+            )
+        )
+
+        return [
+            (identificador, nome)
+            for identificador, nome
+            in sessao.execute(comando).all()
+        ]
+
+
+def listar_preceptores_para_selecao() -> list[OpcaoSelecao]:
+    """Lista preceptores disponíveis para o cadastro de atendimentos."""
+    with sessao_transacional() as sessao:
+        comando = (
+            select(
+                Preceptor.id_profissional,
+                Pessoa.nome,
+            )
+            .join(
+                Pessoa,
+                Pessoa.id_pessoa == Preceptor.id_profissional,
+            )
+            .order_by(
+                Pessoa.nome,
+                Preceptor.id_profissional,
+            )
+        )
+
+        return [
+            (identificador, nome)
+            for identificador, nome
+            in sessao.execute(comando).all()
+        ]
+
+
+def listar_unidades_para_selecao() -> list[OpcaoSelecao]:
+    """Lista as unidades hospitalares exibidas no novo formulário."""
+    with sessao_transacional() as sessao:
+        comando = (
+            select(
+                Unidade.id_unidade,
+                Unidade.nome,
+            )
+            .order_by(
+                Unidade.nome,
+                Unidade.id_unidade,
+            )
+        )
+
+        return [
+            (identificador, nome)
+            for identificador, nome
+            in sessao.execute(comando).all()
+        ]
 
 
 def verificar_objetos_banco() -> list[Registro]:

@@ -58,10 +58,10 @@ class AplicacaoHospital(ctk.CTk):
             background=self.COR_CARTAO_ALTERNADO,
             fieldbackground=self.COR_CARTAO_ALTERNADO,
             foreground=self.COR_TEXTO,
-            rowheight=42,
+            rowheight=34,
             borderwidth=0,
             relief="flat",
-            font=("Segoe UI", 13),
+            font=("Segoe UI", 10),
         )
 
         estilo.configure(
@@ -70,8 +70,8 @@ class AplicacaoHospital(ctk.CTk):
             foreground=self.COR_TEXTO,
             relief="flat",
             borderwidth=0,
-            padding=(12, 11),
-            font=("Segoe UI", 13, "bold"),
+            padding=(10, 9),
+            font=("Segoe UI", 11, "bold"),
         )
 
         estilo.map(
@@ -725,7 +725,7 @@ class AplicacaoHospital(ctk.CTk):
             [len(titulo), *(len(valor) for valor in valores)],
             default=len(titulo),
         )
-        return min(max(150, maior_conteudo * 10 + 46), 420)
+        return min(max(125, maior_conteudo * 8 + 34), 360)
 
     @staticmethod
     def _definir_ancora_coluna(coluna: str) -> str:
