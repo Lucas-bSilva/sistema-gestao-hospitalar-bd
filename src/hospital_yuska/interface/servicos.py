@@ -12,6 +12,7 @@ from sqlalchemy import inspect, select, text
 
 from hospital_yuska.banco import sessao_transacional
 from hospital_yuska.modelos import (
+    Atendimento,
     Paciente,
     Pessoa,
     Preceptor,
@@ -158,6 +159,60 @@ def listar_unidades_para_selecao() -> list[OpcaoSelecao]:
             (identificador, nome)
             for identificador, nome
             in sessao.execute(comando).all()
+        ]
+
+
+def listar_convenios_para_selecao() -> list[str]:
+    """Lista os números de convênio existentes, sem valores vazios ou duplicados."""
+    with sessao_transacional() as sessao:
+        comando = (
+            select(Paciente.num_convenio)
+            .where(Paciente.num_convenio.is_not(None))
+            .where(Paciente.num_convenio != "")
+            .distinct()
+            .order_by(Paciente.num_convenio)
+        )
+
+        convenios = sessao.scalars(comando).all()
+
+        return [
+            str(convenio).strip()
+            for convenio in convenios
+            if str(convenio).strip()
+        ]
+
+
+def listar_atendimentos_para_selecao() -> list[Registro]:
+    """Lista atendimentos com informações legíveis para os formulários da interface."""
+    with sessao_transacional() as sessao:
+        comando = (
+            select(
+                Atendimento.id_atendimento.label("id_atendimento"),
+                Pessoa.nome.label("paciente"),
+                Atendimento.data_hora.label("data_hora"),
+                Unidade.nome.label("unidade"),
+            )
+            .join(
+                Paciente,
+                Paciente.id_pessoa == Atendimento.id_paciente,
+            )
+            .join(
+                Pessoa,
+                Pessoa.id_pessoa == Paciente.id_pessoa,
+            )
+            .join(
+                Unidade,
+                Unidade.id_unidade == Atendimento.id_unidade,
+            )
+            .order_by(
+                Atendimento.data_hora.desc(),
+                Atendimento.id_atendimento.desc(),
+            )
+        )
+
+        return [
+            dict(registro)
+            for registro in sessao.execute(comando).mappings()
         ]
 
 
