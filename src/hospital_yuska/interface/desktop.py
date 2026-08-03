@@ -348,7 +348,7 @@ class AplicacaoHospital(ctk.CTk):
     def _botoes_avancadas(self) -> None:
         botoes = (
             (
-                "Preceptores e flamenguistas",
+                "Preceptores de pacientes flamenguistas",
                 lambda: self._executar(
                     "Preceptores",
                     servicos.obter_preceptores_flamenguistas,
