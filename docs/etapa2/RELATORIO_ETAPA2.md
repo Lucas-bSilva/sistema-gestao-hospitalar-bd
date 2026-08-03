@@ -508,6 +508,7 @@ evidencias/etapa2/
 
 docs/etapa2/
 └── RELATORIO_ETAPA2.md
+```
 
 O arquivo 14_all_etapa2.sql centraliza a execução dos scripts SQL da Etapa 2,
 respeitando a ordem necessária de criação e validação dos objetos.
