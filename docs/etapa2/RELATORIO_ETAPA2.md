@@ -557,3 +557,32 @@ Dessa forma, o projeto apresenta separação entre:
 - serviços de integração;
 - apresentação por interface desktop;
 - testes e evidências de execução.
+
+## 13 Registrando atendimento completo 
+
+Na janela Procedure:
+
+Exemplo:
+[{"id_procedimento":2,"quantidade":1,"tempo_real_minutos":15}]
+
+JSON significa:
+
+procedimento ID 2: Coleta de sangue;
+quantidade: 1;
+tempo real: 15 minutos.
+
+## 14 Situação final da Etapa 2
+
+A Etapa 2 foi concluída, validada e preparada para avaliação acadêmica.
+
+Foram implementados e testados:
+
+- evolução do modelo físico;
+- stored procedures;
+- triggers;
+- views;
+- mapeamento ORM com SQLAlchemy;
+- consultas básicas e avançadas;
+- estratégias de lazy loading e eager loading;
+- controle de transações e concorrência;
+- interface desktop para demonstração das funcionalidades.
