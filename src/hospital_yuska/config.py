@@ -34,7 +34,7 @@ def carregar_configuracao() -> ConfiguracaoBanco:
             "Crie e configure o arquivo .env na raiz do projeto."
         )
 
-    valor_exibir_sql = os.getenv("SQL_ECHO", "false").strip().lower()
+    valor_exibir_sql = os.getenv("EXIBIR_SQL", "false").strip().lower()
 
     return ConfiguracaoBanco(
         url_banco=url_banco,

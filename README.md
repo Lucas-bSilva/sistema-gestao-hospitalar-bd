@@ -1,4 +1,4 @@
-﻿# Sistema de Gestão Hospitalar Dra. Yuska
+# Sistema de Gestão Hospitalar Dra. Yuska
 
 Projeto acadêmico desenvolvido para a disciplina de Banco de Dados, com o objetivo de modelar, implementar e evoluir um sistema de gestão hospitalar utilizando PostgreSQL, SQL, Python e SQLAlchemy.
 
@@ -442,7 +442,7 @@ Exemplo:
 
 ```env
 DATABASE_URL=postgresql+psycopg://hospital_app:SUA_SENHA@127.0.0.1:5432/hospital_yuska
-SQL_ECHO=false
+EXIBIR_SQL=false
 ```
 
 Regras:
