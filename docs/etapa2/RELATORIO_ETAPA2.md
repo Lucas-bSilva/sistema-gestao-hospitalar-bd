@@ -172,3 +172,25 @@ A validação da Etapa 2 é realizada por meio das seguintes atividades:
 - Simulação de concorrência;
 - Inspeção do log de concorrência em UTF-8;
 - Verificação de que o arquivo .env permanece ignorado pelo Git.
+
+12. Conclusão
+
+A Etapa 2 amplia o Sistema de Gestão Hospitalar Dra. Yuska com procedures,
+triggers, views, ORM, consultas avançadas, controle transacional, concorrência
+e uma interface desktop integrada ao PostgreSQL.
+
+A solução mantém a integridade e os recursos desenvolvidos na Etapa 1,
+adicionando uma nova camada de aplicação sem duplicar desnecessariamente as
+regras responsáveis pela consistência dos dados.
+
+As operações críticas permanecem protegidas por transações, restrições,
+triggers e mecanismos de bloqueio, enquanto a interface oferece uma forma mais
+clara e eficiente de demonstrar as funcionalidades.
+
+Dessa forma, o projeto apresenta separação entre:
+
+persistência e integridade no PostgreSQL;
+mapeamento e operações no SQLAlchemy;
+serviços de integração;
+apresentação por interface desktop;
+testes e evidências de execução.
