@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "hospital-yuska"
+version = "0.2.0"
+description = "Etapa 2 do Sistema de Gestão Hospitalar Dra. Yuska"
+readme = "README.md"
+requires-python = ">=3.11"
+
+dependencies = [
+    "SQLAlchemy>=2.0,<2.1",
+    "psycopg[binary]>=3.2,<4",
+    "python-dotenv>=1.0,<2",
+    "customtkinter==6.0.0",
+]
+
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8,<10",
+]
+
+
+[project.scripts]
+hospital-yuska = "hospital_yuska.__main__:main"
+
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["hospital_yuska*"]
+
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "integracao: testes que dependem do PostgreSQL",
+    "concorrencia: testes que utilizam transacoes simultaneas",
+]

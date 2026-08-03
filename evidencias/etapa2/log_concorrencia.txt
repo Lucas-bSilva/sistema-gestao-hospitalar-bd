@@ -1,0 +1,6 @@
+2026-08-02 22:55:28,937 | Transação A | Iniciando transação.
+2026-08-02 22:55:28,945 | Transação A | Residente bloqueado e escala preparada.
+2026-08-02 22:55:28,945 | Transação B | Iniciando transação.
+2026-08-02 22:55:31,947 | Transação A | COMMIT concluído.
+2026-08-02 22:55:31,949 | Transação B | Transação rejeitada: O residente já possui escala nessa data e turno.
+2026-08-02 22:55:31,952 | MainThread | Total final de escalas conflitantes: 1

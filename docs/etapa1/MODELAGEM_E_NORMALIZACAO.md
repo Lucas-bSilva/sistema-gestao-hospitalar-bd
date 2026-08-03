@@ -1,18 +1,18 @@
-# Modelagem e Normalizacao - Etapa 1
+﻿# Modelagem e Normalizacao - Etapa 1
 
-A implementação consegue detectar profissionais cadastrados simultaneamente
-como residente e preceptor por meio de uma consulta de validação presente em
-`sql/06_validacoes.sql`.
+A implementaÃ§Ã£o consegue detectar profissionais cadastrados simultaneamente
+como residente e preceptor por meio de uma consulta de validaÃ§Ã£o presente em
+`sql/etapa1/06_validacoes.sql`.
 
-Entretanto, com a estrutura de especialização baseada exclusivamente em
-tabelas separadas, uma constraint CHECK não consegue consultar a outra tabela.
-Assim, a exclusividade entre os papéis não é garantida de forma preventiva
+Entretanto, com a estrutura de especializaÃ§Ã£o baseada exclusivamente em
+tabelas separadas, uma constraint CHECK nÃ£o consegue consultar a outra tabela.
+Assim, a exclusividade entre os papÃ©is nÃ£o Ã© garantida de forma preventiva
 nesta etapa.
 
-A garantia automática poderá ser implementada posteriormente por uma trigger,
-por um atributo discriminador de papel vigente ou por uma tabela histórica
-com períodos de vigência. Para a Etapa 1, a equipe preservou o modelo
-relacional fornecido no enunciado e documentou essa limitação.
+A garantia automÃ¡tica poderÃ¡ ser implementada posteriormente por uma trigger,
+por um atributo discriminador de papel vigente ou por uma tabela histÃ³rica
+com perÃ­odos de vigÃªncia. Para a Etapa 1, a equipe preservou o modelo
+relacional fornecido no enunciado e documentou essa limitaÃ§Ã£o.
 
 ## 1. Entidades principais
 
@@ -24,22 +24,22 @@ Pessoa e uma entidade generalizada. Paciente e Profissional sao especializacoes 
 
 Profissional tambem e especializado em Residente e Preceptor. A especificacao informa que um profissional pode atuar como preceptor em um periodo e como residente em outro, mantendo historico. Na Etapa 1, o papel atual e representado pelas tabelas `residente` e `preceptor`, sempre ligadas ao mesmo identificador de `profissional`.
 
-### Restrições das especializações
+### RestriÃ§Ãµes das especializaÃ§Ãµes
 
-A especialização de Pessoa em Paciente e Profissional é considerada parcial
-e sobreposta. Ela é parcial porque uma pessoa pode ser cadastrada sem possuir
-imediatamente um desses papéis. É sobreposta porque, no domínio hospitalar,
-um profissional também pode ser atendido como paciente.
+A especializaÃ§Ã£o de Pessoa em Paciente e Profissional Ã© considerada parcial
+e sobreposta. Ela Ã© parcial porque uma pessoa pode ser cadastrada sem possuir
+imediatamente um desses papÃ©is. Ã‰ sobreposta porque, no domÃ­nio hospitalar,
+um profissional tambÃ©m pode ser atendido como paciente.
 
-A especialização de Profissional em Residente e Preceptor é parcial e
-disjunta em relação ao papel vigente. É parcial porque um profissional pode
-ser cadastrado antes da definição do papel. É disjunta porque, em determinado
-momento, um profissional não pode ocupar simultaneamente os papéis de
+A especializaÃ§Ã£o de Profissional em Residente e Preceptor Ã© parcial e
+disjunta em relaÃ§Ã£o ao papel vigente. Ã‰ parcial porque um profissional pode
+ser cadastrado antes da definiÃ§Ã£o do papel. Ã‰ disjunta porque, em determinado
+momento, um profissional nÃ£o pode ocupar simultaneamente os papÃ©is de
 residente e preceptor.
 
-A possibilidade de mudança de papel ao longo do tempo pertence ao histórico
-funcional. Como o modelo básico fornecido para a Etapa 1 não contém datas de
-início e fim de vigência dos papéis, a implementação atual representa apenas
+A possibilidade de mudanÃ§a de papel ao longo do tempo pertence ao histÃ³rico
+funcional. Como o modelo bÃ¡sico fornecido para a Etapa 1 nÃ£o contÃ©m datas de
+inÃ­cio e fim de vigÃªncia dos papÃ©is, a implementaÃ§Ã£o atual representa apenas
 o papel vigente.
 
 ## 3. Cardinalidades
@@ -95,25 +95,25 @@ A remocao de procedimento realizado depende de verificar faturamento. Por isso, 
 
 ## 7. Ajuste operacional na tabela ESCALA
 
-O modelo básico do enunciado representa uma escala pelo dia da semana.
-Entretanto, a consulta analítica da Etapa 1 exige a contagem dos plantões
-no mês corrente. Para que essa consulta pudesse ser implementada de forma
-determinística, foi acrescentado o atributo `data_plantao`.
+O modelo bÃ¡sico do enunciado representa uma escala pelo dia da semana.
+Entretanto, a consulta analÃ­tica da Etapa 1 exige a contagem dos plantÃµes
+no mÃªs corrente. Para que essa consulta pudesse ser implementada de forma
+determinÃ­stica, foi acrescentado o atributo `data_plantao`.
 
-A presença simultânea de `data_plantao` e `dia_semana` constitui uma
-redundância controlada, pois o dia da semana pode ser derivado da data.
-Para impedir divergências, o schema contém a constraint
+A presenÃ§a simultÃ¢nea de `data_plantao` e `dia_semana` constitui uma
+redundÃ¢ncia controlada, pois o dia da semana pode ser derivado da data.
+Para impedir divergÃªncias, o schema contÃ©m a constraint
 `ck_escala_data_dia_coerentes`, que valida se o valor de `dia_semana`
-corresponde à data informada.
+corresponde Ã  data informada.
 
-O núcleo do modelo permanece normalizado até a 3FN. A tabela ESCALA contém
-essa desnormalização controlada exclusivamente para conciliar a estrutura
+O nÃºcleo do modelo permanece normalizado atÃ© a 3FN. A tabela ESCALA contÃ©m
+essa desnormalizaÃ§Ã£o controlada exclusivamente para conciliar a estrutura
 fornecida pelo enunciado com a consulta mensal solicitada.
 
-## 8. Limitação do histórico de papéis na Etapa 1
+## 8. LimitaÃ§Ã£o do histÃ³rico de papÃ©is na Etapa 1
 
-A especificação informa que um profissional pode atuar como residente em determinado período e como preceptor em outro. Entretanto, o modelo relacional básico definido para a Etapa 1 não apresenta atributos de início e fim de vigência desses papéis.
+A especificaÃ§Ã£o informa que um profissional pode atuar como residente em determinado perÃ­odo e como preceptor em outro. Entretanto, o modelo relacional bÃ¡sico definido para a Etapa 1 nÃ£o apresenta atributos de inÃ­cio e fim de vigÃªncia desses papÃ©is.
 
-Por esse motivo, a implementação atual representa somente o papel cadastrado no momento, por meio das tabelas `residente` e `preceptor`. A representação completa do histórico exigiria uma tabela associativa com período de vigência ou outra estrutura adicional.
+Por esse motivo, a implementaÃ§Ã£o atual representa somente o papel cadastrado no momento, por meio das tabelas `residente` e `preceptor`. A representaÃ§Ã£o completa do histÃ³rico exigiria uma tabela associativa com perÃ­odo de vigÃªncia ou outra estrutura adicional.
 
-Essa extensão não foi implementada na Etapa 1 para preservar o modelo relacional básico fornecido na especificação.
+Essa extensÃ£o nÃ£o foi implementada na Etapa 1 para preservar o modelo relacional bÃ¡sico fornecido na especificaÃ§Ã£o.
