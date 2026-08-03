@@ -358,6 +358,7 @@ evidencias/etapa2/
 
 docs/etapa2/
 └── RELATORIO_ETAPA2.md
+```
 
 ## 8. Controle de concorrência
 
