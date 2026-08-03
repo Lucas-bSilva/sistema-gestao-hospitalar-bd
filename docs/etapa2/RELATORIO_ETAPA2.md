@@ -1,135 +1,148 @@
-# Relatório técnico — Etapa 2
+## 8. Controle de concorrência
 
-## 1. Objetivo
+A simulação de concorrência utiliza:
 
-A Etapa 2 amplia o Sistema de Gestão Hospitalar Dra. Yuska com recursos
-avançados de PostgreSQL e uma camada de aplicação desenvolvida em Python
-com SQLAlchemy 2.x.
+- duas threads;
+- duas sessões independentes do SQLAlchemy;
+- duas transações concorrentes;
+- bloqueio pessimista com SELECT ... FOR UPDATE.
 
-A evolução preserva as tabelas e funcionalidades implementadas na Etapa 1,
-evitando a substituição desnecessária dos scripts anteriormente avaliados.
+As duas transações tentam cadastrar uma escala para o mesmo residente, na
+mesma data e no mesmo turno.
 
-## 2. Evolução do modelo físico
+A primeira transação obtém o bloqueio do registro do residente, cadastra a
+escala e mantém a transação ativa por alguns segundos.
 
-Foram acrescentados os seguintes atributos:
+A segunda transação inicia enquanto a primeira ainda possui o bloqueio e
+aguarda a sua liberação.
 
-| Estrutura | Novo atributo | Finalidade |
-|---|---|---|
-| atendimento | id_unidade | identificar a unidade responsável |
-| procedimento_realizado | data_hora_inicio | calcular o tempo de espera |
-| procedimento | media_tempo_procedimento | armazenar a média real |
-| escala | supervisao_ativa | representar a supervisão vigente |
+Após o término da primeira transação, a segunda verifica novamente o estado do
+banco, identifica a escala conflitante e rejeita a operação.
 
-Também foram criadas:
+Ao final da demonstração, apenas uma escala conflitante deve existir no banco.
 
-- `internacao`, responsável pelos períodos de internação;
-- `auditoria_atendimento`, responsável pelo histórico de alterações.
+O controle combina três mecanismos:
 
-O modelo utiliza chaves, restrições, índices e integridade referencial para
-evitar dados inválidos e melhorar a recuperação das informações.
+- bloqueio pessimista na aplicação;
+- trigger de validação;
+- restrição de unicidade no banco.
 
-## 3. Stored procedures
+A simulação está implementada no arquivo:
 
-Foram implementadas três procedures:
+- scripts/simular_concorrencia.py.
 
-### sp_registrar_atendimento_completo
+A evidência da execução é registrada em:
 
-Registra o atendimento e todos os procedimentos recebidos em um array JSON.
-Caso qualquer procedimento seja inválido, toda a operação é desfeita.
+- evidencias/etapa2/log_concorrencia.txt.
 
-### sp_calcular_tempo_medio_espera
+## 9. Interface da aplicação
 
-Calcula, por unidade, o intervalo médio entre a chegada do paciente e o início
-do primeiro procedimento.
+A aplicação possui uma interface desktop desenvolvida com CustomTkinter.
 
-### sp_reajustar_escala
+A interface tem como objetivo facilitar a apresentação acadêmica e permitir a
+execução das funcionalidades sem a necessidade de digitar comandos SQL
+individualmente durante toda a demonstração.
 
-Move as escalas de um residente para outro dia e turno. Antes da alteração,
-bloqueia os registros e verifica possíveis conflitos.
+As funcionalidades foram organizadas nas seguintes áreas:
 
-## 4. Triggers
+### 9.1 Visão geral
 
-Foram implementadas três regras automáticas:
+Disponibiliza acesso a:
 
-- rejeição de escalas sobrepostas;
-- auditoria de INSERT, UPDATE e DELETE em atendimento;
-- recálculo da média real do procedimento após nova realização.
+- verificação dos objetos da Etapa 2;
+- auditoria de atendimentos;
+- médias dos procedimentos;
+- simulação de concorrência.
 
-As triggers foram usadas apenas em situações que precisam ser executadas
-automaticamente em resposta a eventos das tabelas.
+### 9.2 ORM — Etapa 1
 
-## 5. Views
+Disponibiliza operações e consultas reimplementadas com SQLAlchemy, incluindo:
 
-As views implementadas apresentam:
+- inserção de atendimento;
+- consulta dos atendimentos de um paciente;
+- consulta dos procedimentos de um atendimento;
+- atualização de paciente;
+- remoção condicionada de procedimento;
+- média de duração por residente;
+- ranking de residentes;
+- consulta de preceptores;
+- consulta dos plantões;
+- consulta de pacientes sem procedimentos de alto risco.
 
-- pacientes atualmente internados;
-- residentes com supervisão inativa ou preceptor sem titulação de doutor;
-- estatísticas mensais de atendimento por unidade.
+### 9.3 ORM — Avançadas
 
-As views encapsulam consultas recorrentes e facilitam a apresentação dos
-resultados.
+Disponibiliza consultas que demonstram:
 
-## 6. ORM com SQLAlchemy
-
-Todas as tabelas foram mapeadas utilizando o modelo declarativo do
-SQLAlchemy 2.x.
-
-As operações da Etapa 1 foram reimplementadas com:
-
-- `Session`;
-- `select`;
-- `join` e `outerjoin`;
-- `where`;
-- `exists`;
+- junções entre entidades;
+- subconsultas;
 - agregações;
 - funções de janela;
-- relacionamentos entre entidades.
+- percentual de procedimentos de alto risco;
+- último atendimento por paciente;
+- comparação entre carregamento sob demanda e antecipado.
 
-As consultas avançadas foram implementadas sem SQL textual.
+### 9.4 Procedures e views
 
-O projeto demonstra:
+Disponibiliza acesso às funcionalidades implementadas diretamente no
+PostgreSQL:
 
-- lazy loading, no qual o relacionamento é carregado sob demanda;
-- eager loading, no qual os relacionamentos são carregados antecipadamente.
+- consulta de pacientes internados;
+- consulta de supervisão inadequada;
+- consulta de estatísticas mensais;
+- registro completo de atendimento;
+- cálculo do tempo médio de espera;
+- reajuste de escala.
 
-## 7. Concorrência
+Os formulários de inserção e atualização utilizam seletores pesquisáveis para
+apresentar registros existentes no banco. Essa abordagem reduz a necessidade
+de o usuário memorizar identificadores numéricos e diminui o risco de
+informações inválidas.
 
-A simulação utiliza duas threads e duas sessões independentes.
+As janelas de procedimentos, atualização de paciente e cadastro de atendimento
+foram organizadas de forma padronizada para facilitar a utilização e a
+apresentação.
 
-As duas transações tentam cadastrar uma escala para o mesmo residente, data
-e turno. A primeira transação bloqueia a linha do residente utilizando
-`SELECT ... FOR UPDATE`.
+A camada gráfica está implementada principalmente em:
 
-A segunda transação aguarda o término da primeira e, após a liberação,
-identifica a escala conflitante e rejeita a operação.
+- src/hospital_yuska/interface/desktop.py;
+- src/hospital_yuska/interface/servicos.py.
 
-O controle combina:
+A interface não substitui as regras do banco. As validações, restrições,
+procedures e triggers continuam sendo responsáveis pela integridade final dos
+dados.
 
-- bloqueio pessimista;
-- trigger de validação;
-- índice único no banco.
+A aplicação também mantém uma interface de linha de comando como mecanismo
+complementar de execução e diagnóstico.
 
-## 8. Interface
+## 10. Organização e rastreabilidade
 
-Foi adotada uma interface de linha de comando porque ela permite demonstrar
-as funcionalidades da Etapa 2 com menor complexidade e sem introduzir um
-framework web que não é exigido pela especificação.
+Os principais artefatos da Etapa 2 estão organizados da seguinte forma:
 
-A CLI oferece acesso às consultas, views, estratégias de carregamento e
-relatórios principais.
+```text
+sql/etapa2/
+├── 08_evolucao_estrutura.sql
+├── 09_dados_complementares.sql
+├── 10_procedures.sql
+├── 11_triggers.sql
+├── 12_views.sql
+├── 13_testes_sql_etapa2.sql
+└── 14_all_etapa2.sql
 
-## 9. Validação
+src/hospital_yuska/
+├── consultas/
+├── concorrencia/
+├── interface/
+├── modelos/
+├── repositorios/
+├── banco.py
+├── cli.py
+└── _main_.py
 
-A validação é realizada por meio de:
+scripts/
+└── simular_concorrencia.py
 
-- `13_testes_sql_etapa2.sql`;
-- teste de conexão Python;
-- compilação dos módulos;
-- execução da CLI;
-- simulação de concorrência;
-- inspeção do log gerado.
+evidencias/etapa2/
+└── log_concorrencia.txt
 
-## 10. Conclusão
-
-A Etapa 2 adiciona procedures, triggers, views, ORM, consultas avançadas,
-transações e concorrência sem comprometer a estrutura aprovada na Etapa 1.
+docs/etapa2/
+└── RELATORIO_ETAPA2.md
