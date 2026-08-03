@@ -146,3 +146,29 @@ evidencias/etapa2/
 
 docs/etapa2/
 └── RELATORIO_ETAPA2.md
+
+O arquivo 14_all_etapa2.sql centraliza a execução dos scripts SQL da Etapa 2,
+respeitando a ordem necessária de criação e validação dos objetos.
+
+## 11. Validação
+
+A validação da Etapa 2 é realizada por meio das seguintes atividades:
+
+- Execução da evolução estrutural;
+- Inserção dos dados complementares;
+- Criação das procedures;
+- Criação das triggers;
+- Criação das views;
+- Execução de 13_testes_sql_etapa2.sql;
+- Execução consolidada de 14_all_etapa2.sql;
+- Teste da conexão da aplicação com o PostgreSQL;
+- Compilação dos módulos Python;
+- Instalação do projeto em modo editável;
+- Inicialização da aplicação pelo módulo hospital_yuska;
+- Execução das consultas ORM;
+- Execução das consultas avançadas;
+- Execução das procedures e views pela interface;
+- Teste dos formulários e seletores pesquisáveis;
+- Simulação de concorrência;
+- Inspeção do log de concorrência em UTF-8;
+- Verificação de que o arquivo .env permanece ignorado pelo Git.
